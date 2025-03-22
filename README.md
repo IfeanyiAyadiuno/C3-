@@ -130,7 +130,7 @@ The application implements the following views:
 
 1. Inspection Tickets List - Displays all inspection tickets with their details and status
 
-![inspection-ticket](./Screenshots/inspection-ticket.png)
+![inspection-ticket](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspection-ticket.png)
 
 2. Inspector Assignment - Interface for assigning inspectors to tickets
 
