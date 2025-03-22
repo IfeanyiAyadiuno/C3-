@@ -1,0 +1,182 @@
+/* 🌟 LOGIN PAGE STYLING */
+
+/* Background image with a blue overlay for login page */
+.login-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("../images/background.png") no-repeat center center fixed;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(50%) sepia(20%) hue-rotate(180deg) saturate(200%);
+    opacity: 0.6; /* Adjust opacity to make it look more blue */
+    z-index: -1;
+}
+
+/* Login Box */
+.login-box {
+    background: rgba(255, 255, 255, 0.9); /* Slight transparency */
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo Styling */
+.logo {
+    width: 60px;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+.input-group {
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+}
+
+/* Sign-in Button */
+.btn {
+    width: 100%;
+    border-radius: 25px;
+    padding: 12px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-dark {
+    background-color: black;
+    color: white;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-dark:hover {
+    background-color: #333;
+}
+
+/* Forgot Password & Portal Links */
+.forgot-password, .portal-link {
+    font-size: 14px;
+    display: block;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+.portal-link {
+    color: blue;
+    font-weight: bold;
+}
+
+.portal-link:hover {
+    text-decoration: underline;
+}
+
+/* 🌟 DASHBOARD STYLING */
+
+/* Ensure pages AFTER login have a white background */
+.dashboard-container {
+    background: white !important;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Top Black Header Bar */
+.top-header {
+    background: black;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top-header img {
+    height: 40px; /* Adjust logo size */
+}
+
+/* Blue Date Bar */
+.blue-bar {
+    background: #009dff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Welcome Message */
+.welcome-section {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+/* Main Features Section */
+.features-container {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    text-align: center;
+}
+
+.feature {
+    text-align: center;
+    width: 30%;
+}
+
+.feature img {
+    width: 80px;
+    height: auto;
+}
+
+.feature h3 {
+    color: #007bff;
+}
+
+/* Upcoming Inspections Sidebar */
+.inspections-container {
+    position: absolute;
+    right: 30px;
+    top: 250px; /* Pushes it down */
+    width: 250px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.inspections-container h3 {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+}
+
