@@ -134,16 +134,9 @@ The application implements the following views:
 
 2. Inspector Assignment - Interface for assigning inspectors to tickets
 
-![inspeciton-assign](./Screenshots/inspeciton-assign.png)
+![inspeciton-assign](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspeciton-assign.png)
 
 3. Inspection Scheduling - Calendar interface for scheduling inspections
 
-![inspeciton-booking](./Screenshots/inspeciton-booking.png)
+![inspeciton-booking](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspeciton-booking.png)
 
-## License
-
-This project is proprietary and confidential.
-
-## Contributors
-
-- Development Team at Consumer Car Care
