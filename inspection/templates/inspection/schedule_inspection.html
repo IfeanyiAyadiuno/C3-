@@ -1,0 +1,128 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}Schedule Inspection | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Inspection Schedule Title -->
+    {% if ticket %}
+    <div class="user-info">
+        <div class="user-avatar">{{ ticket.inspector.name|default:'?'|first }}</div>
+        <div>
+            <h2 style="margin: 0;">{{ ticket.inspector.name|default:'Inspector Booking' }}, Inspection Booking</h2>
+            <p style="margin: 0; color: #666;">{{ ticket.inspection_type }} Inspection</p>
+        </div>
+    </div>
+    <hr>
+    
+    <!-- Inspection Details -->
+    <div style="display: flex; margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="width: 24px; height: 24px; border-radius: 50%; background-color: #e1f5fe; display: flex; justify-content: center; align-items: center; margin-right: 10px;">1</span>
+                <span>Hour Inspection</span>
+            </div>
+            <p style="margin-top: 20px;">
+                Inspection for a claim on a {{ ticket.inspection_type }} Warranty
+            </p>
+        </div>
+        
+        <div style="flex: 1;">
+            <p><strong>Time zone</strong></p>
+            <div style="display: flex; align-items: center;">
+                <span style="margin-right: 10px;">🌐</span>
+                <span>Eastern Standard Time (EST) • UTC-5</span>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <h2>Schedule an Inspection</h2>
+    <p>Please select a ticket before scheduling.</p>
+    {% endif %}
+    
+    <!-- Calendar Section -->
+    <h3>Select a Date & Time</h3>
+    <div class="calendar">
+        <!-- Calendar Header and Navigation -->
+        <div class="calendar-header">
+            <h3>{{ month_name }} {{ year }}</h3>
+            <div>
+                <a href="{% url 'schedule_inspection' ticket.id %}?month={{ prev_month }}&year={{ prev_year }}" style="margin-right: 10px; text-decoration: none;">←</a>
+                <a href="{% url 'schedule_inspection' ticket.id %}?month={{ next_month }}&year={{ next_year }}" style="text-decoration: none;">→</a>
+            </div>
+        </div>
+        
+        <!-- Calendar Weekday Headers -->
+        <div class="calendar-grid">
+            <div class="calendar-day" style="font-weight: bold;">MON</div>
+            <div class="calendar-day" style="font-weight: bold;">TUE</div>
+            <div class="calendar-day" style="font-weight: bold;">WED</div>
+            <div class="calendar-day" style="font-weight: bold;">THU</div>
+            <div class="calendar-day" style="font-weight: bold;">FRI</div>
+            <div class="calendar-day" style="font-weight: bold;">SAT</div>
+            <div class="calendar-day" style="font-weight: bold;">SUN</div>
+            
+            <!-- Fill Calendar Empty Cells -->
+            {% for day in days %}
+                <div class="calendar-day{% if day.is_today %} today{% endif %}"
+                     onclick="selectDate('{{ day.date|date:'Y-m-d' }}')">
+                    {{ day.day }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Time Selection Form -->
+    {% if ticket %}
+    <form id="scheduleForm" method="post" action="{% url 'schedule_inspection' ticket.id %}">
+        {% csrf_token %}
+        <input type="hidden" id="selected_date" name="date" value="">
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <label for="time">Select Time:</label>
+            <select id="time" name="time" class="form-control">
+                <option value="09:00">9:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">1:00 PM</option>
+                <option value="14:00">2:00 PM</option>
+                <option value="15:00">3:00 PM</option>
+                <option value="16:00">4:00 PM</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; margin-top: 20px;">Schedule Inspection</button>
+    </form>
+    {% endif %}
+</div>
+
+<script>
+    function selectDate(date) {
+        // Set the selected date value
+        document.getElementById('selected_date').value = date;
+        
+        // Remove all date selection styles
+        const days = document.querySelectorAll('.calendar-day');
+        days.forEach(function(day) {
+            day.style.backgroundColor = '';
+            day.style.color = '';
+        });
+        
+        // Add selection style to the selected date
+        event.currentTarget.style.backgroundColor = '#3498db';
+        event.currentTarget.style.color = 'white';
+    }
+    
+    // Set the current date as the default selection when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayString = year + '-' + month + '-' + day;
+        
+        document.getElementById('selected_date').value = todayString;
+    });
+</script>
+{% endblock %}

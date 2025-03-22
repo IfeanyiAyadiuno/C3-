@@ -4,7 +4,7 @@ from django.db import models
 class Item(models.Model):
 
     # Item in inventory
-    ID = models.IntegerField()
+    item_id = models.IntegerField()  # 将ID改为item_id
     Description = models.CharField(max_length=200)
     Procurement_Price = models.FloatField()
     Sales_Price = models.FloatField()
@@ -13,7 +13,7 @@ class Item(models.Model):
 
     def __str__(self):
         # Return a string representation of the model
-        return self.text
+        return self.Description  # 修复为返回Description
 
 class Entry(models.Model):
     # Entering in the item into inventory
@@ -25,4 +25,4 @@ class Entry(models.Model):
     
     def __str__(self):
         # Return a string representation of the model
-        return f"{self.text[:50]}..."
+        return f"Entry added on {self.date_added}"  # 修复为返回日期信息

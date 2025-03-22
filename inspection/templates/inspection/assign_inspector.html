@@ -1,0 +1,86 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}Assign Inspector | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Assign Inspector Title -->
+    <h2>Assign an Inspector</h2>
+    
+    <!-- Inspector List Table -->
+    <div class="table">
+        <!-- Table Header -->
+        <div class="table-header" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div></div> <!-- Avatar Column -->
+            <div>Inspector Name</div>
+            <div>Phone</div>
+            <div>Status</div>
+            <div>Action</div>
+        </div>
+        
+        <!-- Table Data Rows -->
+        {% for inspector in inspectors %}
+        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div>
+                <div class="user-avatar">{{ inspector.name|first }}</div>
+            </div>
+            <div>{{ inspector.name }}</div>
+            <div>{{ inspector.phone }}</div>
+            <div>{{ inspector.status }}</div>
+            <div>
+                <form method="post" action="{% url 'assign_inspector' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="inspector_id" value="{{ inspector.id }}">
+                    <input type="hidden" name="ticket_id" value="{{ request.GET.ticket_id }}">
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <div class="table-row" style="text-align: center; grid-template-columns: 1fr;">
+            <div>No inspectors found.</div>
+        </div>
+        {% endfor %}
+        
+        <!-- Sample Data - Only for demonstration, can be deleted in actual use -->
+        {% if not inspectors %}
+        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div>
+                <div class="user-avatar">J</div>
+            </div>
+            <div>John Smith</div>
+            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
+            <div>Available</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div>
+                <div class="user-avatar">S</div>
+            </div>
+            <div>Samantha Davis</div>
+            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
+            <div>Available</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div>
+                <div class="user-avatar">M</div>
+            </div>
+            <div>Michael Wong</div>
+            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
+            <div>Available</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
+            <div>
+                <div class="user-avatar">A</div>
+            </div>
+            <div>Amanda Green</div>
+            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
+            <div>Available</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
