@@ -130,13 +130,13 @@ The application implements the following views:
 
 1. Inspection Tickets List - Displays all inspection tickets with their details and status
 
-![inspection-ticket](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspection-ticket.png)
+![inspection-ticket](https://github.com/IfeanyiAyadiuno/C3-/tree/main/Screenshots/inspection-ticket.png)
 
 2. Inspector Assignment - Interface for assigning inspectors to tickets
 
-![inspeciton-assign](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspeciton-assign.png)
+![inspeciton-assign](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/tree/main/Screenshots/inspeciton-assign.png)
 
 3. Inspection Scheduling - Calendar interface for scheduling inspections
 
-![inspeciton-booking](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/main/Screenshots/inspeciton-booking.png)
+![inspeciton-booking](https://raw.githubusercontent.com/IfeanyiAyadiuno/C3-/tree/main/Screenshots/inspeciton-booking.png)
 
