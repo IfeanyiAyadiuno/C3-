@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Item
-from .forms import InventoryForm, SaleForm
+from .forms import InventoryForm, SaleForm, AddStockForm
 
 # Create your views here.
 def index(request):
@@ -33,7 +33,7 @@ def addInventory(request):
             #print("form errors:", form.errors)
     # Display blank or invalid form
     context = {'form':form}
-    return render(request, 'inventory/add-inventory.html', context)
+    return render(request, 'inventory/add-inventory-item.html', context)
 
 def record_sale(request):
     """ Record a sale and update inventory quantity """
@@ -54,3 +54,25 @@ def record_sale(request):
         form = SaleForm()
 
     return render(request, 'inventory/record-sale.html', {'form': form})
+
+def increaseInventory(request):
+    """ Increase inventory quantity for an existing item """
+    
+    if request.method == 'POST':
+        form = AddStockForm(data=request.POST)  # Form submission
+        if form.is_valid():
+            stock_update = form.save(commit=False)  # Temporary instance
+
+            # Ensure item exists in the inventory
+            item = stock_update.item  # Ensure AddStockForm includes an item field
+            item.quantity += stock_update.quantity  # Increase inventory
+            item.save()  # Save changes to the database
+            stock_update.save()
+
+            return redirect('inventory:view-inventory')  # Redirect back to inventory page
+
+    else:
+        form = AddStockForm()  # Empty form for GET requests
+
+    context = {'form': form}
+    return render(request, 'inventory/increase-inventory.html', context)

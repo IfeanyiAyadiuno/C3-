@@ -11,7 +11,7 @@ class InventoryForm(forms.ModelForm):
                   'quantity'}
         labels = {'name' :'Item Name',
                   'price':'Purchase Price',
-                  'sell':'Sales Price',
+                  'sell':'Sale Price',
                   'quantity':'Quantity'}
         
 class SaleForm(forms.ModelForm):
@@ -22,3 +22,13 @@ class SaleForm(forms.ModelForm):
         }
         labels = {'item':'Item Name',
                   'quantity':'Quantity'}
+        
+class AddStockForm(forms.ModelForm):
+    class Meta:
+        model = Sale  # If using a different model, update this line
+        fields = ['item', 'quantity']  # Ensure 'item' is a ForeignKey to Item
+
+        labels = {
+            'item': 'Select Item',
+            'quantity': 'Quantity to Add',
+        }
