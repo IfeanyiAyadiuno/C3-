@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 class Item(models.Model):
@@ -6,7 +7,7 @@ class Item(models.Model):
     price = models.FloatField()
     sell = models.FloatField()
     quantity = models.IntegerField()
-    time = models.IntegerField()
+    time = models.DateTimeField(default=timezone.now)
 
 
 

@@ -8,12 +8,10 @@ class InventoryForm(forms.ModelForm):
         fields = {'name',
                   'price',
                   'sell',
-                  'time',
                   'quantity'}
         labels = {'name' :'Item Name',
                   'price':'Purchase Price',
                   'sell':'Sales Price',
-                  'time':'Date Last Purchased',
                   'quantity':'Quantity'}
         
 class SaleForm(forms.ModelForm):

@@ -50,7 +50,7 @@ def record_sale(request):
                 return redirect('inventory:view-inventory')  # Redirect to inventory list
             else:
                 form.add_error('quantity', 'Not enough stock available!')
-        else:
-            form = SaleForm()
+    else:
+        form = SaleForm()
 
-    return render(request, 'inventory/record_sale.html', {'form': form})
+    return render(request, 'inventory/record-sale.html', {'form': form})
