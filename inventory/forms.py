@@ -1,0 +1,26 @@
+#inventory/forms.py
+from django import forms
+from .models import Item, Sale
+
+class InventoryForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = {'name',
+                  'price',
+                  'sell',
+                  'time',
+                  'quantity'}
+        labels = {'name' :'Item Name',
+                  'price':'Purchase Price',
+                  'sell':'Sales Price',
+                  'time':'Date Last Purchased',
+                  'quantity':'Quantity'}
+        
+class SaleForm(forms.ModelForm):
+    class Meta:
+        model = Sale
+        fields = {'item',
+                  'quantity'
+        }
+        labels = {'item':'Item Name',
+                  'quantity':'Quantity'}

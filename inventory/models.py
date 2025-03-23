@@ -2,27 +2,22 @@ from django.db import models
 
 # Create your models here.
 class Item(models.Model):
+    name = models.CharField(max_length=20)
+    price = models.FloatField()
+    sell = models.FloatField()
+    quantity = models.IntegerField()
+    time = models.IntegerField()
 
-    # Item in inventory
-    item_id = models.IntegerField()  # 将ID改为item_id
-    Description = models.CharField(max_length=200)
-    Procurement_Price = models.FloatField()
-    Sales_Price = models.FloatField()
-    Length = models.IntegerField()
 
 
     def __str__(self):
         # Return a string representation of the model
-        return self.Description  # 修复为返回Description
+        return self.name  #Description
 
-class Entry(models.Model):
-    # Entering in the item into inventory
+class Sale(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE) # Link Sale to an Intem
+    quantity = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        verbose_name_plural = 'Inventory Item'
-    
     def __str__(self):
-        # Return a string representation of the model
-        return f"Entry added on {self.date_added}"  # 修复为返回日期信息
+        return f"{self.item.name} - {self.quantity} sold"
