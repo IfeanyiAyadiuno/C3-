@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from inspection import views as inspection_views
+from django.shortcuts import redirect  # ✅ for redirecting to login page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', inspection_views.index, name='home'),
+    path('users/', include('users.urls')),  # ✅ Include users app
     path('inspection/', include('inspection.urls')),
     path('inventory/', include('inventory.urls')),
+
+    # ✅ Redirect homepage to login page
+    path('', lambda request: redirect('users:login')),
 ]
+

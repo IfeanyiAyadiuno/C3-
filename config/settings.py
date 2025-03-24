@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     # New Apps
     'inventory',
     'inspection',
-
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -125,3 +125,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ✅ Redirect users based on login/logout status
+LOGIN_URL = '/users/login/'
+LOGIN_REDIRECT_URL = '/users/dashboard/'
+LOGOUT_REDIRECT_URL = '/users/login/'
