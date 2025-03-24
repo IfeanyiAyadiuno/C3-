@@ -1,0 +1,12 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h1>Inventory List</h1>
+    <ul>
+        {% for item in inventory %}
+            <li>{{ item.name }} - Quantity: {{ item.quantity }}</li>
+            <a href="{% url 'inventory:record-sale' %}">Record Sale</a>
+        {% empty %}
+            <li>No items in inventory.</li>
+        {% endfor %}
+    </ul>
+{% endblock content %}

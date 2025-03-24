@@ -1,0 +1,59 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}Create Inspection Ticket | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Create Inspection Ticket Title -->
+    <h2>Create New Inspection Ticket</h2>
+    
+    <!-- Create Inspection Ticket Form -->
+    <form method="post" action="{% url 'create_inspection_ticket' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="inspection_type">Inspection Type:</label>
+            <select id="inspection_type" name="inspection_type" class="form-control" required>
+                <option value="">Select Inspection Type</option>
+                <option value="Rust Protection">Rust Protection</option>
+                <option value="Basic">Basic</option>
+                <option value="Standard">Standard</option>
+                <option value="Comprehensive">Comprehensive</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="company">Company:</label>
+            <input type="text" id="company" name="company" class="form-control" required placeholder="Enter company name">
+        </div>
+        
+        <div class="form-group">
+            <label for="vehicle_make">Vehicle Make:</label>
+            <input type="text" id="vehicle_make" name="vehicle_make" class="form-control" required placeholder="Enter vehicle make">
+        </div>
+        
+        <div class="form-group">
+            <label for="vin">VIN:</label>
+            <input type="text" id="vin" name="vin" class="form-control" required placeholder="Enter vehicle identification number">
+        </div>
+        
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select id="priority" name="priority" class="form-control">
+                <option value="Normal">Normal</option>
+                <option value="Critical">Critical</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="tag">Tag:</label>
+            <select id="tag" name="tag" class="form-control">
+                <option value="No Tag Assigned">No Tag Assigned</option>
+                <option value="Tag 1">Tag 1</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; margin-top: 20px;">Create Ticket</button>
+    </form>
+</div>
+{% endblock %}

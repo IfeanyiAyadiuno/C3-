@@ -1,0 +1,17 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h1>Record Sale</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="id_item">Select Item:</label>
+    {{ form.item }}
+
+    <label for="id_quantity">Quantity Sold:</label>
+    {{ form.quantity }}
+
+    <button type="submit">Record Sale</button>
+</form>
+
+<a href="{% url 'inventory:view-inventory' %}">Back to Inventory</a>
+{% endblock %}

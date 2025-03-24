@@ -1,0 +1,118 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}Inspection Tickets | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Inspection Ticket List Title -->
+    <h2>Inspection Tickets</h2>
+    
+    <!-- Search Box -->
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+        <div style="position: relative; width: 300px;">
+            <input type="text" placeholder="Search Ticket" style="width: 100%; padding: 8px 30px 8px 10px; border-radius: 4px; border: 1px solid #ddd;">
+            <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #999;">🔍</span>
+        </div>
+    </div>
+    
+    <!-- Inspection Ticket Table -->
+    <div class="table">
+        <!-- Table Header -->
+        <div class="table-header" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div></div> <!-- Checkbox Column -->
+            <div>Ticket #</div>
+            <div>Company</div>
+            <div>Vehicle Make</div>
+            <div>Date</div>
+            <div>Inspection Type</div>
+            <div>Tag</div>
+            <div>Priority</div>
+            <div>Actions</div>
+        </div>
+        
+        <!-- Table Data Rows -->
+        {% for ticket in tickets %}
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>{{ ticket.ticket_number }}</div>
+            <div>{{ ticket.company }}</div>
+            <div>{{ ticket.vehicle_make }}</div>
+            <div>{{ ticket.date_created|date:"Y-m-d" }}</div>
+            <div>{{ ticket.inspection_type }}</div>
+            <div>{{ ticket.tag }}</div>
+            <div>
+                <span {% if ticket.priority == 'Critical' %}style="color: red;"{% endif %}>
+                    {{ ticket.priority }}
+                </span>
+            </div>
+            <div>
+                <a href="{% url 'assign_inspector' %}?ticket_id={{ ticket.id }}" class="btn btn-primary">Assign</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="table-row" style="text-align: center; grid-template-columns: 1fr;">
+            <div>No inspection tickets found.</div>
+        </div>
+        {% endfor %}
+        
+        <!-- Sample Data - Only for demonstration, can be deleted in actual use -->
+        {% if not tickets %}
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>T00001</div>
+            <div>Toyota North America</div>
+            <div>Toyota Camry</div>
+            <div>2023-01-10</div>
+            <div>Rust Protection</div>
+            <div>Tag 1</div>
+            <div style="color: red;">Critical</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>T00002</div>
+            <div>Honda</div>
+            <div>Civic</div>
+            <div>2023-01-09</div>
+            <div>Basic</div>
+            <div>Critical</div>
+            <div>Normal</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>T00003</div>
+            <div>Honda</div>
+            <div>Civic</div>
+            <div>2023-01-09</div>
+            <div>Standard</div>
+            <div>No Tag Assigned</div>
+            <div>Normal</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>T00004</div>
+            <div>Honda</div>
+            <div>Civic</div>
+            <div>2023-01-09</div>
+            <div>Standard</div>
+            <div>No Tag Assigned</div>
+            <div>Critical</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        <div class="table-row" style="grid-template-columns: 40px 80px 120px 120px 120px 120px 80px 80px 80px;">
+            <div><input type="checkbox"></div>
+            <div>T00005</div>
+            <div>Honda</div>
+            <div>Civic</div>
+            <div>2023-01-08</div>
+            <div>Standard</div>
+            <div>Critical</div>
+            <div>Normal</div>
+            <div><button class="btn btn-primary">Assign</button></div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
