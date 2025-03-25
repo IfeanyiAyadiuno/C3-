@@ -36,22 +36,23 @@ def addInventory(request):
     return render(request, 'inventory/add-inventory-item.html', context)
 
 def record_sale(request):
-    """ Record a sale and update inventory quantity """
+    """Record a Sale and reduce inventory"""
     if request.method == 'POST':
-        form = SaleForm(request.POST)
+        form = AddStockForm(request.POST)
         if form.is_valid():
-            sale = form.save(commit=False)  # Get sale instance
-            item = sale.item  # Get the selected inventory item
+            sale = form.save(commit=False)  # Temporarily save sale
+            item = sale.item  # Get the item being sold
 
-            if item.quantity >= sale.quantity:  # Ensure enough stock
-                item.quantity -= sale.quantity  # Reduce stock
-                item.save()  # Save updated inventory
-                sale.save()  # Save the sale record
-                return redirect('inventory:view-inventory')  # Redirect to inventory list
-            else:
-                form.add_error('quantity', 'Not enough stock available!')
+            if sale.quantity > item.quantity:  # Check if sale exceeds stock
+                return render(request, 'inventory/low-stock-warning.html', {'item': item, 'sale': sale})
+
+            item.quantity -= sale.quantity  # Reduce stock
+            item.save()
+            sale.save()
+            return redirect('inventory:view-inventory')
+
     else:
-        form = SaleForm()
+        form = AddStockForm()
 
     return render(request, 'inventory/record-sale.html', {'form': form})
 

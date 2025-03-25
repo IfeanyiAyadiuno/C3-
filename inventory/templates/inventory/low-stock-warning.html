@@ -1,0 +1,15 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<h2>Warning: Low Stock</h2>
+<p>You're trying to sell more than the available stock for <strong>{{ item.name }}</strong>.</p>
+<p>Available Stock: {{ item.quantity }}</p>
+<p>Requested Sale: {{ sale.quantity }}</p>
+
+<form method="post" action="{% url 'inventory:record-sale' %}">
+    {% csrf_token %}
+    <input type="hidden" name="item" value="{{ sale.item.id }}">
+    <input type="hidden" name="quantity" value="{{ sale.quantity }}">
+</form>
+
+<a href="{% url 'inventory:record-sale' %}">Go Back</a>
+{% endblock %}
