@@ -1,0 +1,45 @@
+{% extends 'warranty/base.html' %}
+{% load static %}
+
+{% block title %}Warranty Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Claims Pending Decision</div>
+            <div class="card-body">
+                {% for claim in pending_claims %}
+                <p><strong>{{ claim.customer_name }}</strong><br>
+                    <strong>Claim #:</strong> {{ claim.claim_number }}<br>
+                    <strong>Warranty Type:</strong> {{ claim.warranty_type }}<br>
+                    <strong>Date of Completed Inspection:</strong> {{ claim.inspection_date }}<br>
+                    <a href="{% url 'warranty:claim_detail' claim.id %}">View Claim</a>
+                </p>
+                <hr>
+                {% endfor %}
+                <a href="{% url 'warranty:claims_list' %}" class="btn btn-dark w-100">View all</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card bg-light">
+            <div class="card-header bg-info text-white">Search Policies</div>
+            <div class="card-body">
+                <form method="get" action="{% url 'warranty:policies_search' %}">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="first_name" placeholder="First Name">
+                        <input type="text" class="form-control mt-2" name="last_name" placeholder="Last Name">
+                        <input type="text" class="form-control mt-2" name="email" placeholder="Email">
+                        <input type="text" class="form-control mt-2" name="phone" placeholder="Phone Number">
+                        <input type="text" class="form-control mt-2" name="policy_number" placeholder="Policy Number">
+                        <button class="btn btn-dark mt-3 w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

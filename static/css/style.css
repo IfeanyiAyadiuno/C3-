@@ -179,4 +179,207 @@ input {
     font-size: 16px;
     text-align: center;
 }
+/* 🌟 WARRANTY + CLAIMS PAGE STYLING */
+
+.header-links {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+}
+
+.header-links a {
+    color: #007bff;
+    font-weight: bold;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.header-links a:hover {
+    text-decoration: underline;
+}
+
+.warranty-title-bar {
+    background-color: #009dff;
+    color: white;
+    padding: 20px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.btn-dark {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+.btn-dark:hover {
+    background-color: #333;
+}
+
+/* Warranty Claims Table Styling */
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.search-form .form-control {
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.claim-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #e9f5ff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.claim-status .badge {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.badge-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: black;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* Warranty Detail Sections */
+.claim-section {
+    border-radius: 8px;
+    background-color: #e0f0ff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+}
+
+.claim-section h5 {
+    font-weight: bold;
+    color: #333;
+}
+
+.timeline-step {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+    align-items: center;
+}
+
+.timeline-step .step {
+    text-align: center;
+    width: 100px;
+    font-size: 14px;
+}
+
+.timeline-step .step .circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin: 0 auto 5px;
+    background-color: #ccc;
+}
+
+.timeline-step .step.active .circle {
+    background-color: #007bff;
+}
+
+.timeline-step .step.active {
+    font-weight: bold;
+}
+/* Table Enhancements */
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+}
+.warranty-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.05);
+}
+
+.warranty-table {
+    margin-top: 30px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.warranty-table thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+}
+
+.warranty-table td, .warranty-table th {
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Consistent section headers */
+h2.section-title, h1.section-title {
+    margin-bottom: 25px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Blue header bar for warranty pages */
+.blue-top-bar {
+    background-color: #009dff;
+    color: white;
+    padding: 15px 30px;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* Centered action buttons */
+.btn-center {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
 

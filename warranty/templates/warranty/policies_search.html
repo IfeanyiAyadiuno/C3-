@@ -1,0 +1,29 @@
+
+{% extends 'warranty/base.html' %}
+{% load static %}
+{% block title %}Search Policies{% endblock %}
+
+{% block content %}
+<div class="search-section">
+    <div class="card">
+        <div class="card-header bg-info text-white">Search Policies</div>
+        <div class="card-body">
+            <form method="get" action="">
+                <div class="form-row">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name">
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name">
+                </div>
+                <div class="form-row">
+                    <input type="text" class="form-control" name="email" placeholder="example@email.com">
+                    <input type="text" class="form-control" name="phone" placeholder="(XXX) XXX-XXXX">
+                </div>
+                <input type="text" class="form-control" name="policy_number" placeholder="E.g. E00001">
+                <button class="btn btn-dark mt-3 w-100">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

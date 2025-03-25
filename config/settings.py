@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # New Apps
     'inventory',
     'inspection',
+    'warranty',
     'users',
     'django.contrib.admin',
     'django.contrib.auth',

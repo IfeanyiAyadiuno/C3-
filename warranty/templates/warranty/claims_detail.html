@@ -1,0 +1,70 @@
+{% extends 'warranty/base.html' %}
+{% load static %}
+
+{% block title %}Claim #{{ claim.claim_number }}{% endblock %}
+
+{% block content %}
+<h2>Claim #{{ claim.claim_number }}</h2>
+
+<div class="card mb-4 p-3">
+    <div class="row mb-2">
+        <div class="col-md-4"><strong>Status:</strong> {{ claim.status }}</div>
+        <div class="col-md-4"><strong>Assigned To:</strong> {{ claim.assigned_to }}</div>
+        <div class="col-md-4"><strong>Initiated By:</strong> {{ claim.initiated_by }}</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="claim-section">
+            <h5>Customer Info</h5>
+            <p>First name: {{ claim.customer_first_name }}</p>
+            <p>Last name: {{ claim.customer_last_name }}</p>
+            <p>Vehicle: {{ claim.vehicle }}</p>
+            <p>VIN: {{ claim.vin }}</p>
+            <p>Policy Number: {{ claim.policy_number }}</p>
+            <p>Warranty Category: {{ claim.category }}</p>
+        </div>
+
+        <div class="claim-section">
+            <h5>Inspection Report</h5>
+            <p>Status: {{ claim.inspection_status }}</p>
+            <p>Ticket #: {{ claim.inspection_ticket }}</p>
+            <p>Notes: {{ claim.inspection_notes }}</p>
+            <p>Estimate: {{ claim.estimate }}</p>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="claim-section">
+            <h5>Incident Details</h5>
+            <p>{{ claim.description }}</p>
+            <p>Odometer Reading: {{ claim.odometer_reading }}</p>
+            <p>Dealership Notes: {{ claim.dealership_notes }}</p>
+        </div>
+
+        <div class="claim-section">
+            <h5>Coverage Decision</h5>
+            <p>Decision: {{ claim.coverage_decision }}</p>
+            <p>C3 Notes: {{ claim.c3_notes }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="timeline-step mt-4">
+    <div class="step {% if claim.status == 'Initiated' %}active{% endif %}">
+        <div class="circle"></div>
+        Initiated
+    </div>
+    <div class="step {% if claim.status == 'Submitted' %}active{% endif %}">
+        <div class="circle"></div>
+        Submitted
+    </div>
+    <div class="step {% if claim.status == 'Closed' %}active{% endif %}">
+        <div class="circle"></div>
+        Closed
+    </div>
+</div>
+{% endblock %}
+
+

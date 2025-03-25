@@ -23,6 +23,8 @@ urlpatterns = [
     path('users/', include('users.urls')),  # ✅ Include users app
     path('inspection/', include('inspection.urls')),
     path('inventory/', include('inventory.urls')),
+    path('warranty/', include('warranty.urls')),
+
 
     # ✅ Redirect homepage to login page
     path('', lambda request: redirect('users:login')),
