@@ -47,8 +47,11 @@
         <div class="calendar-header">
             <h3>{{ month_name }} {{ year }}</h3>
             <div>
-                <a href="{% url 'schedule_inspection' ticket.id %}?month={{ prev_month }}&year={{ prev_year }}" style="margin-right: 10px; text-decoration: none;">←</a>
-                <a href="{% url 'schedule_inspection' ticket.id %}?month={{ next_month }}&year={{ next_year }}" style="text-decoration: none;">→</a>
+                <!-- check to make sure ticket exists before creating calendar-->
+                {% if ticket_id %}
+                    <a href="{% url 'schedule_inspection' ticket.id %}?month={{ prev_month }}&year={{ prev_year }}" style="margin-right: 10px; text-decoration: none;">←</a>
+                    <a href="{% url 'schedule_inspection' ticket.id %}?month={{ next_month }}&year={{ next_year }}" style="text-decoration: none;">→</a>
+                    {% endif %}
             </div>
         </div>
         
@@ -94,7 +97,7 @@
         
         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; margin-top: 20px;">Schedule Inspection</button>
     </form>
-    {% endif %}
+{% endif %}
 </div>
 
 <script>
