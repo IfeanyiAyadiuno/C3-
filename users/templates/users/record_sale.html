@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record Sale</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="dashboard-container">
+
+<!-- Top Header Bar -->
+<div class="top-header">
+    <h2>Toyota Nord Montreal <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+</div>
+
+<!-- Blue Date Bar -->
+<div class="blue-bar">
+    <h1>{{ current_date }}</h1>
+</div>
+
+<!-- Sales Form Section -->
+<div class="container mt-5">
+    <div class="card p-4 shadow" style="border-radius: 12px;">
+        <div class="card-header text-white" style="background-color: #009dff; border-radius: 8px 8px 0 0;">
+            <h5 class="mb-0 text-center">Record Sales Transaction</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="vin" class="form-label">VIN</label>
+                        <input type="text" class="form-control" id="vin" placeholder="e.g. Exxxxx">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="service_type" class="form-label">Service Type</label>
+                        <select class="form-select" id="service_type">
+                            <option selected>Choose service type...</option>
+                            <option>Rust Protection</option>
+                            <option>Fabric Protection</option>
+                            <option>Paint Protection</option>
+                            <option>VIN Etching</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Customer Last Name</label>
+                        <input type="text" class="form-control" id="last_name" placeholder="e.g. Exxxxx">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="warranty_type" class="form-label">Warranty Type</label>
+                        <select class="form-select" id="warranty_type">
+                            <option selected>Choose warranty type...</option>
+                            <option>Standard Warranty</option>
+                            <option>Extended Warranty</option>
+                            <option>Powertrain Warranty</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">Customer First Name</label>
+                        <input type="text" class="form-control" id="first_name" placeholder="e.g. Exxxxx">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="e.g. johndoe@email.com">
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary px-4">Submit Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -19,9 +19,14 @@
 
             <p class="forgot-password"><a href="#">Forgot Password?</a></p>
             <p><a href="{% url 'users:register' %}" class="portal-link">Create New Account</a></p>
+
+            <!-- ✅ Dealer Portal Link -->
+            <p><a href="{% url 'users:dealer_login' %}" class="portal-link">Dealer Sign In</a></p>
         </form>
     </div>
 </div>
 {% endblock %}
+
+
 
 

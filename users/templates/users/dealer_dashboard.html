@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dealer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="dashboard-container">
+
+<!-- Header -->
+<div class="top-header">
+    <h2>Toyota Nord Montreal <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+</div>
+
+<!-- Date Bar -->
+<div class="blue-bar">
+    <h1>{{ current_date }}</h1>
+</div>
+
+<!-- Welcome Message -->
+<div class="welcome-section">
+    <h4>Good afternoon, Toyota-Nord Montreal!</h4>
+</div>
+
+<!-- Main Dealer Functions -->
+<!-- Features Section -->
+<div class="features-container">
+    <a href="{% url 'users:record_sale' %}" class="feature text-decoration-none text-dark">
+        <img src="{% static 'images/sales.png' %}" alt="Sales" style="height: 90px;">  <!-- optional resizing -->
+        <h3 style="font-size: 1.8rem; font-weight: 600;">Record a Sale</h3>
+        <p style="font-size: 1.1rem;">Capture C3 service and warranty sales.</p>
+    </a>
+
+    <a href="{% url 'users:submit_claim' %}" class="feature text-decoration-none text-dark">
+        <img src="{% static 'images/claims.png' %}" alt="Claims" style="height: 90px;">
+        <h3 style="font-size: 1.8rem; font-weight: 600;">Claims & Warranties</h3>
+        <p style="font-size: 1.1rem;">Submit, track, and manage warranty claims effortlessly.</p>
+    </a>
+</div>
+
+
+</body>
+</html>
+

@@ -9,4 +9,8 @@ urlpatterns = [
     path('login/', views.custom_login, name='login'),  # Use your custom login view
     path('logout/', views.log_out, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('dealer-login/', views.dealer_login, name='dealer_login'),
+    path('dealer/', views.dealer_dashboard, name='dealer_dashboard'),
+    path('dealer/record-sale/', views.record_sale, name='record_sale'),
+    path('dealer/submit-claim/', views.submit_claim, name='submit_claim'),
 ]

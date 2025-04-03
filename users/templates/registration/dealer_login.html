@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dealer Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .dealer-login-container {
+            background: url("{% static 'images/background.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .dealer-login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .dealer-login-box img {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+
+        .dealer-login-box h2 {
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .dealer-login-box input {
+            border-radius: 25px;
+            padding: 12px 20px;
+            width: 100%;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .dealer-login-box button {
+            width: 100%;
+            border-radius: 30px;
+            padding: 12px;
+            background-color: black;
+            color: white;
+            font-weight: bold;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dealer-login-box button:hover {
+            background-color: #333;
+        }
+
+        .dealer-login-box a {
+            font-size: 0.9rem;
+            color: #888;
+            text-decoration: none;
+        }
+
+        .dealer-login-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dealer-login-container">
+    <div class="dealer-login-box">
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
+        <h2>Dealer Sign In</h2>
+
+        <form method="POST" action="{% url 'users:login' %}?next=dealer">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Your username" required>
+            <input type="password" name="password" placeholder="Your password" required>
+            <button type="submit">Sign In</button>
+        </form>
+
+        <div class="mt-3">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

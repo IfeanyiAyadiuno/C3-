@@ -4,28 +4,26 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from warranty.forms import DealerClaimForm
 
 def register(request):
     """Register a new user."""
     if request.method != 'POST':
-        # Display blank registration form.
         form = UserCreationForm()
     else:
-        # Process completed form.
         form = UserCreationForm(data=request.POST)
-
         if form.is_valid():
             new_user = form.save()
-            # Log the user in and redirect to dashboard page.
             login(request, new_user)
-            return redirect('users:dashboard')  # ✅ Redirect to dashboard
+            return redirect('users:dashboard')
 
-    # Display a blank or invalid form.
     context = {'form': form}
     return render(request, 'registration/register.html', context)
 
 def custom_login(request):
     """Custom login view."""
+    next_page = request.GET.get('next', '')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -33,26 +31,66 @@ def custom_login(request):
 
         if user is not None:
             login(request, user)
-            return redirect('users:dashboard')  # ✅ Redirect to dashboard
+
+            if next_page == 'dealer':
+                return redirect('users:dealer_dashboard')
+            else:
+                return redirect('users:dashboard')
         else:
-            messages.error(request, "Invalid username or password.")  # Show error message
+            messages.error(request, "Invalid username or password.")
 
     return render(request, 'registration/login.html')
 
 def log_out(request):
     """Log the user out and redirect to login page."""
     logout(request)
-    return redirect('users:login')  # ✅ Fix: Redirect to login page after logout
+    return redirect('users:login')
 
 @login_required
 def dashboard(request):
     """Landing page after login"""
     context = {
-        'current_date': datetime.now().strftime('%B %d, %Y'),  # Format as "March 20, 2025"
-        'total_sales': 0,  # Default to 0
-        'pending_claims': 0,  # Default to 0
-        'upcoming_inspections': 0,  # Default to 0
-        'inspections': [],  # Pass an empty list for now
+        'current_date': datetime.now().strftime('%B %d, %Y'),
+        'total_sales': 0,
+        'pending_claims': 0,
+        'upcoming_inspections': 0,
+        'inspections': [],
     }
     return render(request, 'users/dashboard.html', context)
+
+# ✅ NEW VIEW for Dealer Login Page
+def dealer_login(request):
+    """Custom dealership login page with its own design."""
+    return render(request, 'registration/dealer_login.html')
+
+@login_required
+def dealer_dashboard(request):
+    context = {
+        'current_date': datetime.now().strftime('%B %d, %Y')
+    }
+    return render(request, 'users/dealer_dashboard.html', context)
+
+@login_required
+def record_sale(request):
+    current_date = datetime.now().strftime('%B %d, %Y')
+    return render(request, 'users/record_sale.html', {'current_date': current_date})
+
+@login_required
+def submit_claim(request):
+    """Handles the dealer warranty claim form submission."""
+    if request.method == 'POST':
+        form = DealerClaimForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('users:dealer_dashboard')  # Redirect after saving
+    else:
+        form = DealerClaimForm()
+
+    return render(request, 'users/submit_claim.html', {
+        'form': form,
+        'current_date': datetime.now().strftime('%B %d, %Y'),
+    })
+
+
+
 
