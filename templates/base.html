@@ -14,6 +14,7 @@
 </head>  
 <body>
 
+    {% if not hide_nav %}
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #007bff;">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'users:dashboard' %}">C3 Portal</a>
@@ -37,8 +38,10 @@
             </div>
         </div>
     </nav>
+    {% endif %}
 
     {% block content %}{% endblock content %}
 
 </body>  
 </html>
+

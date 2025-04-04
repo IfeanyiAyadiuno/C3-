@@ -11,7 +11,13 @@
 
 <!-- Top Header Bar -->
 <div class="top-header">
-    <h2>Toyota Nord Montreal <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+    <h2>
+        <a href="{% url 'users:dealer_dashboard' %}" class="text-white text-decoration-none">
+            Toyota Nord Montreal
+        </a>
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
+    </h2>
+    
 </div>
 
 <!-- Blue Date Bar -->

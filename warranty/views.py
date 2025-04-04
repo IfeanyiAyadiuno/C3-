@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Claim, Policy
+from django.utils.timezone import now
 
 
 def claims_landing(request):
@@ -11,8 +12,9 @@ def claims_landing(request):
 
 
 def claims_list(request):
-    """ Display all warranty claims in a list/table """
-    claims = Claim.objects.all().order_by('-date_issued')
+    """ Display all valid warranty claims in a list/table """
+    # Filter to only include claims that have essential fields filled in
+    claims = Claim.objects.exclude(claim_number__isnull=True).exclude(claim_number__exact='').order_by('-date_issued')
     return render(request, 'warranty/claims_list.html', {
         'claims': claims
     })
@@ -51,4 +53,5 @@ def policies_search(request):
     return render(request, 'warranty/policies_search.html', {
         'results': policies
     })
+
 

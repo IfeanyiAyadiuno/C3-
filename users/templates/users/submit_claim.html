@@ -11,7 +11,13 @@
 
 <!-- Header -->
 <div class="top-header">
-    <h2>Toyota Nord Montreal <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+    <h2>
+        <a href="{% url 'users:dealer_dashboard' %}" class="text-white text-decoration-none">
+            Toyota Nord Montreal
+        </a>
+        <img src="{% static 'images/logo.png' %}" alt="Logo">
+    </h2>
+    
 </div>
 
 <!-- Blue Date Bar -->
@@ -38,22 +44,28 @@
                     <label class="mt-3">Warranty Type</label>
                     <select name="warranty_type" class="form-control" required>
                         <option value="" disabled selected>Choose warranty type...</option>
-                        <option value="paint">Paint</option>
-                        <option value="rust">Rust</option>
-                        <option value="fabric">Fabric</option>
-                        <option value="vin etching">VIN Etching</option>
+                        <option value="Paint">Paint</option>
+                        <option value="Rust">Rust</option>
+                        <option value="Fabric">Fabric</option>
+                        <option value="VIN Etching">VIN Etching</option>
                     </select>
 
                     <label class="mt-3">Inspection Date</label>
                     <input type="date" name="inspection_date" class="form-control" required>
+
+                    <label class="mt-3">Vehicle</label>
+                    <input type="text" name="vehicle" class="form-control" placeholder="e.g. Ram 1500">
                 </div>
 
                 <div class="col-md-6">
                     <label>VIN</label>
                     <input type="text" name="vin" class="form-control" placeholder="e.g. 1HGCM82633A004352" required>
 
+                    <label class="mt-3">Odometer</label>
+                    <input type="number" name="odometer" class="form-control" placeholder="e.g. 75000">
+
                     <label class="mt-3">Incident Description</label>
-                    <textarea name="incident_description" class="form-control" rows="4" placeholder="Describe the issue in detail..."></textarea>
+                    <textarea name="incident_description" class="form-control" rows="3" placeholder="Describe the issue in detail..."></textarea>
 
                     <label class="mt-3">Dealership Notes</label>
                     <textarea name="dealership_notes" class="form-control" rows="2" placeholder="Any dealership-specific notes..."></textarea>
@@ -69,4 +81,5 @@
 
 </body>
 </html>
+
 

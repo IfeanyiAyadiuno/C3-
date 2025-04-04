@@ -18,10 +18,12 @@
 
     <!-- ✅ Top Header Bar -->
     <div class="top-header d-flex justify-content-between align-items-center px-4 py-2">
-        <h2 class="mb-0 text-white">
-            Consumer Car Care 
+        <h2 class="mb-0">
+            <a href="{% url 'users:dashboard' %}" class="text-white text-decoration-none">
+                Consumer Car Care
+            </a>
             <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 30px; margin-left: 10px;">
-        </h2>
+        </h2>        
         <div class="header-links">
             <a href="{% url 'warranty:policies_search' %}">View Policies</a>
             <a href="{% url 'warranty:claims_list' %}">View Claims</a>

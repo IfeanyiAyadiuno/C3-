@@ -1,4 +1,4 @@
-{% extends 'warranty/base.html' %}
+{% extends 'warranty/base.html' %} 
 {% load static %}
 
 {% block title %}Claims List{% endblock %}
@@ -11,8 +11,8 @@
             <thead class="thead-light">
                 <tr>
                     <th>Claim #</th>
-                    <th>Warranty #</th>
-                    <th>Category</th>
+                    <th>Customer</th>
+                    <th>Warranty Type</th>
                     <th>Date Issued</th>
                     <th>Status</th>
                     <th>Assigned to</th>
@@ -23,12 +23,16 @@
                 {% for claim in claims %}
                 <tr>
                     <td>{{ claim.claim_number }}</td>
-                    <td>{{ claim.warranty_number }}</td>
-                    <td>{{ claim.category }}</td>
+                    <td>{{ claim.customer_name }}</td>
+                    <td>{{ claim.warranty_type }}</td>
                     <td>{{ claim.date_issued }}</td>
                     <td>{{ claim.status }}</td>
                     <td>{{ claim.assigned_to }}</td>
-                    <td><a href="{% url 'warranty:claim_detail' claim.id %}" class="btn btn-primary">Open Claim</a></td>
+                    <td>
+                        <a href="{% url 'warranty:claim_detail' claim.id %}" class="btn btn-primary btn-sm">
+                            Open Claim
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -40,6 +44,7 @@
     </div>
 </div>
 {% endblock %}
+
 
 
 

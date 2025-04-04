@@ -18,12 +18,10 @@
     <div class="col-md-6">
         <div class="claim-section">
             <h5>Customer Info</h5>
-            <p>First name: {{ claim.customer_first_name }}</p>
-            <p>Last name: {{ claim.customer_last_name }}</p>
+            <p>Customer Name: {{ claim.customer_name }}</p>
             <p>Vehicle: {{ claim.vehicle }}</p>
             <p>VIN: {{ claim.vin }}</p>
-            <p>Policy Number: {{ claim.policy_number }}</p>
-            <p>Warranty Category: {{ claim.category }}</p>
+            <p>Warranty Type: {{ claim.warranty_type }}</p>
         </div>
 
         <div class="claim-section">
@@ -38,8 +36,8 @@
     <div class="col-md-6">
         <div class="claim-section">
             <h5>Incident Details</h5>
-            <p>{{ claim.description }}</p>
-            <p>Odometer Reading: {{ claim.odometer_reading }}</p>
+            <p>Odometer Reading: {{ claim.odometer }}</p>
+            <p>Incident Description: {{ claim.incident_description }}</p>
             <p>Dealership Notes: {{ claim.dealership_notes }}</p>
         </div>
 
@@ -66,5 +64,6 @@
     </div>
 </div>
 {% endblock %}
+
 
 

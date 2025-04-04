@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,9 +196,11 @@
 <body>
     <!-- Top Navigation Bar -->
     <div class="header">
-        <div class="logo">
-            Consumer Car Care
-            <div class="logo-icon">C</div>
+        <div class="logo d-flex align-items-center">
+            <a href="{% url 'users:dashboard' %}" style="color: white; text-decoration: none; font-weight: bold;">
+                Consumer Car Care
+            </a>
+            <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 28px; margin-left: 10px;">
         </div>
         <div>
             <span class="notification-icon">🔔</span>
