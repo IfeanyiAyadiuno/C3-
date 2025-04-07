@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Consumer Car Care{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     <style>
         /* Global Styles */
         body {
@@ -16,7 +17,7 @@
         
         /* Top Navigation Bar */
         .header {
-            background-color: #333;
+            background-color: #007bff;
             color: white;
             padding: 10px 20px;
             display: flex;
@@ -31,8 +32,8 @@
         }
         
         .logo-icon {
-            background-color: #3498db;
-            color: white;
+            background-color: #ffffff;
+            color: #007bff;
             width: 24px;
             height: 24px;
             border-radius: 50%;
@@ -108,7 +109,7 @@
         }
         
         .btn-primary {
-            background-color: #3498db;
+            background-color: #007bff;
             color: white;
         }
         
@@ -203,7 +204,9 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 28px; margin-left: 10px;">
         </div>             
         <div>
-            <span class="notification-icon">🔔</span>
+            <a href="{% url 'users:dashboard' %}" style="color: white; text-decoration: none; margin-right: 15px;">Dashboard</a>
+            <span class="notification-icon" style="margin-right: 10px;">🔔</span>
+            <img src="{% static 'images/bell.png' %}" alt="Notifications" style="height: 20px;">
         </div>
     </div>
     
@@ -214,6 +217,7 @@
         <div class="actions">
             <a href="{% url 'inspection_tickets' %}">View Tickets</a>
             <a href="{% url 'create_inspection_ticket' %}">Report Inspection</a>
+            <a href="{% url 'create_inspector' %}">Add Inspector</a>
         </div>
     </div>
     

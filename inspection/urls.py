@@ -8,4 +8,5 @@ urlpatterns = [
     path('schedule-inspection/<int:ticket_id>/', views.schedule_inspection, name='schedule_inspection'),
     path('schedule-inspection/', views.schedule_inspection, name='schedule_inspection_no_ticket'),
     path('create-ticket/', views.create_inspection_ticket, name='create_inspection_ticket'),
+    path('create-inspector/', views.create_inspector, name='create_inspector'),
 ]

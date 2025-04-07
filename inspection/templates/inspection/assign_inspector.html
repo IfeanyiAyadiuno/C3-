@@ -5,7 +5,13 @@
 {% block content %}
 <div class="card">
     <!-- Assign Inspector Title -->
-    <h2>Assign an Inspector</h2>
+    <h2>Assign an Inspector to Ticket #{{ ticket.ticket_number }}</h2>
+    <p style="margin-bottom: 15px; text-align: center;">当前票据ID: {{ ticket.id }}</p>
+    
+    <!-- Add Inspector Button -->
+    <div style="text-align: right; margin-bottom: 15px;">
+        <a href="{% url 'create_inspector' %}" class="btn btn-primary">Add New Inspector</a>
+    </div>
     
     <!-- Inspector List Table -->
     <div class="table">
@@ -28,59 +34,50 @@
             <div>{{ inspector.phone }}</div>
             <div>{{ inspector.status }}</div>
             <div>
-                <form method="post" action="{% url 'assign_inspector' %}">
+                <form method="post" action="" id="assignForm{{ inspector.id }}">
                     {% csrf_token %}
                     <input type="hidden" name="inspector_id" value="{{ inspector.id }}">
-                    <input type="hidden" name="ticket_id" value="{{ request.GET.ticket_id }}">
-                    <button type="submit" class="btn btn-primary">Assign</button>
+                    <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                    <button type="submit" class="btn btn-primary" onclick="console.log('提交分配请求：检查员ID={{ inspector.id }}, 票据ID={{ ticket.id }}')">
+                        Assign
+                    </button>
                 </form>
             </div>
         </div>
         {% empty %}
         <div class="table-row" style="text-align: center; grid-template-columns: 1fr;">
-            <div>No inspectors found.</div>
+            <div>No inspectors found in the database. Please add inspectors first.</div>
         </div>
         {% endfor %}
-        
-        <!-- Sample Data - Only for demonstration, can be deleted in actual use -->
-        {% if not inspectors %}
-        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
-            <div>
-                <div class="user-avatar">J</div>
-            </div>
-            <div>John Smith</div>
-            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
-            <div>Available</div>
-            <div><button class="btn btn-primary">Assign</button></div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
-            <div>
-                <div class="user-avatar">S</div>
-            </div>
-            <div>Samantha Davis</div>
-            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
-            <div>Available</div>
-            <div><button class="btn btn-primary">Assign</button></div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
-            <div>
-                <div class="user-avatar">M</div>
-            </div>
-            <div>Michael Wong</div>
-            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
-            <div>Available</div>
-            <div><button class="btn btn-primary">Assign</button></div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 60px 150px 120px 120px 100px;">
-            <div>
-                <div class="user-avatar">A</div>
-            </div>
-            <div>Amanda Green</div>
-            <div>555-01 Airport Pkwy<br/>Irving, Texas 75062</div>
-            <div>Available</div>
-            <div><button class="btn btn-primary">Assign</button></div>
-        </div>
-        {% endif %}
+    </div>
+    
+    <!-- 调试信息 -->
+    <div style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+        <h4>调试信息：</h4>
+        <p>当前票据ID: {{ ticket.id }}</p>
+        <p>当前票据状态: {{ ticket.status }}</p>
+        <p>当前票据检查员: {% if ticket.inspector %}{{ ticket.inspector.name }}{% else %}未分配{% endif %}</p>
+        <p>可用检查员数量: {{ inspectors|length }}</p>
+    </div>
+    
+    <!-- Return to Tickets Button -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{% url 'inspection_tickets' %}" class="btn btn-primary">Return to Tickets</a>
     </div>
 </div>
+
+<script>
+    // 监听表单提交事件
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form[id^="assignForm"]');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const inspectorId = form.querySelector('input[name="inspector_id"]').value;
+                const ticketId = form.querySelector('input[name="ticket_id"]').value;
+                console.log(`表单提交：检查员ID=${inspectorId}, 票据ID=${ticketId}`);
+                // 不阻止表单提交
+            });
+        });
+    });
+</script>
 {% endblock %}
