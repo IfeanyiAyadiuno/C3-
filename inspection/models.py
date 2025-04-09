@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from warranty.models import Claim
 
 # Create your models here.
 class Inspector(models.Model):
@@ -39,6 +40,7 @@ class InspectionTicket(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
     inspection_notes = models.TextField(blank=True, null=True)
+    claim = models.ForeignKey(Claim, on_delete=models.SET_NULL, null=True, blank=True)
     
     def __str__(self):
         return f"Ticket #{self.ticket_number} - {self.inspection_type}"

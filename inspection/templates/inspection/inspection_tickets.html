@@ -1,51 +1,13 @@
 {% extends "inspection/base.html" %}
-
 {% block title %}Inspection Tickets | Consumer Car Care{% endblock %}
 
 {% block content %}
 <div class="card">
-    <!-- Inspection Ticket List Title -->
     <h2>Inspection Tickets</h2>
-    
-    <!-- Search Box - Center aligned -->
-    <div style="display: flex; justify-content: center; margin: 20px 0;">
-        <div style="position: relative; width: 50%;">
-            <input type="text" id="searchInput" placeholder="Search by Ticket #, Company, or Vehicle Make" 
-                   style="width: 100%; padding: 10px 35px 10px 15px; border-radius: 20px; border: 1px solid #ddd; font-size: 14px;"
-                   onkeyup="searchTickets()">
-            <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #999;">🔍</span>
-        </div>
-    </div>
-    
-    <!-- Status Message -->
-    {% if request.GET.updated %}
-    <div id="statusMessage" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
-        Operation successful! Data has been updated.
-    </div>
-    <script>
-        // Hide message automatically after 5 seconds
-        setTimeout(function() {
-            var statusMsg = document.getElementById('statusMessage');
-            if(statusMsg) statusMsg.style.display = 'none';
-        }, 5000);
-    </script>
-    {% elif request.GET.deleted %}
-    <div id="statusMessage" style="background-color: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
-        Ticket #{{ request.GET.deleted }} has been successfully deleted.
-    </div>
-    <script>
-        // Hide message automatically after 5 seconds
-        setTimeout(function() {
-            var statusMsg = document.getElementById('statusMessage');
-            if(statusMsg) statusMsg.style.display = 'none';
-        }, 5000);
-    </script>
-    {% endif %}
-    
-    <!-- Inspection Ticket Table -->
+
     <div class="table">
-        <!-- Table Header -->
-        <div class="table-header" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
+        <!-- ✅ Header with Claim Column -->
+        <div class="table-header" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px 100px;">
             <div></div> <!-- Checkbox Column -->
             <div>Ticket #</div>
             <div>Company</div>
@@ -55,13 +17,14 @@
             <div>Tag</div>
             <div>Priority</div>
             <div>Status</div>
+            <div>Claim</div> <!-- ✅ New Claim Column -->
             <div>Actions</div>
         </div>
-        
-        <!-- Table Data Rows -->
+
         <div id="ticketRows">
             {% for ticket in tickets %}
-            <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
+            <!-- ✅ Row with Matching Column Widths and Claim Output -->
+            <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px 100px;">
                 <div><input type="checkbox"></div>
                 <div>{{ ticket.ticket_number }}</div>
                 <div>{{ ticket.company }}</div>
@@ -75,234 +38,43 @@
                     </span>
                 </div>
                 <div>
-                    <span {% if ticket.status == 'Assigned' %}style="color: green; font-weight: bold;"{% endif %}
-                          {% if ticket.status == 'Open' %}style="color: orange; font-weight: bold;"{% endif %}
-                          {% if ticket.status == 'Completed' %}style="color: blue; font-weight: bold;"{% endif %}>
+                    <span style="font-weight: bold;
+                        {% if ticket.status == 'Open' %}color: orange;
+                        {% elif ticket.status == 'Assigned' %}color: green;
+                        {% elif ticket.status == 'Completed' %}color: blue;
+                        {% endif %}">
                         {{ ticket.status }}
                         {% if ticket.inspector %}
-                        <br><small>({{ ticket.inspector.name }})</small>
+                            <br><small>({{ ticket.inspector.name }})</small>
                         {% endif %}
                     </span>
                 </div>
                 <div>
-                    {% if ticket.status == 'Open' %}
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <a href="{% url 'assign_inspector' %}?ticket_id={{ ticket.id }}" class="btn btn-primary">Assign</a>
-                        <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('{{ ticket.id }}', '{{ ticket.ticket_number }}')">Delete</button>
-                    </div>
-                    {% elif ticket.status == 'Assigned' %}
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <a href="{% url 'assign_inspector' %}?ticket_id={{ ticket.id }}" class="btn btn-primary" style="background-color: #28a745;">Reassign</a>
-                        <a href="{% url 'complete_inspection' ticket.id %}" class="btn btn-primary" style="background-color: #007bff;">Complete</a>
-                        <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('{{ ticket.id }}', '{{ ticket.ticket_number }}')">Delete</button>
-                    </div>
+                    {% if ticket.claim %}
+                        <a href="{% url 'warranty:claim_detail' ticket.claim.id %}">
+                            {{ ticket.claim.claim_number }}
+                        </a>
                     {% else %}
-                    <div style="display: flex; flex-direction: column; gap: 5px;">
-                        <a href="{% url 'view_inspection' ticket.id %}" class="btn btn-primary" style="background-color: #6c757d;">View</a>
-                        <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('{{ ticket.id }}', '{{ ticket.ticket_number }}')">Delete</button>
-                    </div>
+                        <em style="color: gray;">None</em>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if ticket.status == 'Open' %}
+                        <a href="{% url 'assign_inspector' %}?ticket_id={{ ticket.id }}" class="btn btn-primary">Assign</a>
+                    {% elif ticket.status == 'Assigned' %}
+                        <a href="{% url 'complete_inspection' ticket.id %}" class="btn btn-success">Complete</a>
+                    {% else %}
+                        <a href="{% url 'view_inspection' ticket.id %}" class="btn btn-secondary">View</a>
                     {% endif %}
                 </div>
             </div>
             {% empty %}
-            <div class="table-row" style="text-align: center; grid-template-columns: 1fr;">
-                <div>No inspection tickets found.</div>
+            <div class="table-row">
+                <div style="grid-column: span 11; text-align: center;">No inspection tickets found.</div>
             </div>
             {% endfor %}
         </div>
-        
-        <!-- Sample Data - Only for demonstration, can be deleted in actual use -->
-        {% if not tickets %}
-        <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
-            <div><input type="checkbox"></div>
-            <div>T00001</div>
-            <div>Toyota North America</div>
-            <div>Toyota Camry</div>
-            <div>2023-01-10</div>
-            <div>Rust Protection</div>
-            <div>Tag 1</div>
-            <div style="color: red;">Critical</div>
-            <div style="color: orange; font-weight: bold;">Open</div>
-            <div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button class="btn btn-primary">Assign</button>
-                    <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('1', 'T00001')">Delete</button>
-                </div>
-            </div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
-            <div><input type="checkbox"></div>
-            <div>T00002</div>
-            <div>Honda</div>
-            <div>Civic</div>
-            <div>2023-01-09</div>
-            <div>Basic</div>
-            <div>Critical</div>
-            <div>Normal</div>
-            <div style="color: green; font-weight: bold;">Assigned<br><small>(John Smith)</small></div>
-            <div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button class="btn btn-primary" style="background-color: #28a745;">Reassign</button>
-                    <button class="btn btn-primary" style="background-color: #007bff;">Complete</button>
-                    <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('2', 'T00002')">Delete</button>
-                </div>
-            </div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
-            <div><input type="checkbox"></div>
-            <div>T00003</div>
-            <div>Honda</div>
-            <div>Civic</div>
-            <div>2023-01-09</div>
-            <div>Standard</div>
-            <div>No Tag Assigned</div>
-            <div>Normal</div>
-            <div style="color: orange; font-weight: bold;">Open</div>
-            <div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button class="btn btn-primary">Assign</button>
-                    <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('3', 'T00003')">Delete</button>
-                </div>
-            </div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
-            <div><input type="checkbox"></div>
-            <div>T00004</div>
-            <div>Honda</div>
-            <div>Civic</div>
-            <div>2023-01-09</div>
-            <div>Standard</div>
-            <div>No Tag Assigned</div>
-            <div>Critical</div>
-            <div style="color: blue; font-weight: bold;">Completed</div>
-            <div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <a href="{% url 'view_inspection' 4 %}" class="btn btn-primary" style="background-color: #6c757d;">View</a>
-                    <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('4', 'T00004')">Delete</button>
-                </div>
-            </div>
-        </div>
-        <div class="table-row" style="grid-template-columns: 40px 70px 100px 100px 100px 100px 100px 80px 100px 100px;">
-            <div><input type="checkbox"></div>
-            <div>T00005</div>
-            <div>Honda</div>
-            <div>Civic</div>
-            <div>2023-01-08</div>
-            <div>Standard</div>
-            <div>Critical</div>
-            <div>Normal</div>
-            <div style="color: orange; font-weight: bold;">Open</div>
-            <div>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button class="btn btn-primary">Assign</button>
-                    <button class="btn btn-primary" style="background-color: #dc3545;" onclick="confirmDelete('5', 'T00005')">Delete</button>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
-
-<script>
-    // Add refresh functionality after page load
-    document.addEventListener('DOMContentLoaded', function() {
-        // If URL contains updated parameter, force refresh data from server
-        if(window.location.href.includes('updated=')) {
-            // Clear browser cache and refresh page content
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', window.location.pathname, true);
-            xhr.setRequestHeader('Cache-Control', 'no-cache');
-            xhr.onload = function() {
-                console.log('Page content refreshed');
-            };
-            xhr.send();
-        }
-    });
-    
-    function searchTickets() {
-        // Get input value and convert to lowercase
-        var input = document.getElementById("searchInput");
-        var filter = input.value.toLowerCase();
-        
-        // Get all rows
-        var rows = document.querySelectorAll("#ticketRows .table-row");
-        
-        // If no rows found, it might be sample data, so don't perform search
-        if (rows.length === 0) {
-            return;
-        }
-        
-        // Loop through each row for filtering
-        rows.forEach(function(row) {
-            try {
-                var ticketNumberEl = row.querySelector("div:nth-child(2)");
-                var companyEl = row.querySelector("div:nth-child(3)");
-                var vehicleMakeEl = row.querySelector("div:nth-child(4)");
-                
-                // Check if elements exist
-                if (!ticketNumberEl || !companyEl || !vehicleMakeEl) {
-                    // If it's the "No inspection tickets found" info row, just return
-                    if (row.textContent.trim().includes("No inspection tickets found")) {
-                        return;
-                    }
-                    // Otherwise hide this row
-                    row.style.display = "none";
-                    return;
-                }
-                
-                var ticketNumber = ticketNumberEl.textContent.toLowerCase();
-                var company = companyEl.textContent.toLowerCase();
-                var vehicleMake = vehicleMakeEl.textContent.toLowerCase();
-                
-                // Check if matches
-                if (ticketNumber.indexOf(filter) > -1 || 
-                    company.indexOf(filter) > -1 || 
-                    vehicleMake.indexOf(filter) > -1) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            } catch (error) {
-                console.log("Error processing row:", error);
-                // Don't change row display state if error occurs
-            }
-        });
-    }
-</script>
-
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
-    <div style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <h3 style="margin-top: 0;">Confirm Deletion</h3>
-        <p id="deleteMessage">Are you sure you want to delete this ticket?</p>
-        <div style="text-align: right;">
-            <button onclick="closeDeleteModal()" class="btn" style="background-color: #6c757d; color: white; margin-right: 10px;">Cancel</button>
-            <form id="deleteForm" method="POST" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn" style="background-color: #dc3545; color: white;">Delete</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Delete confirmation functions
-    function confirmDelete(ticketId, ticketNumber) {
-        document.getElementById('deleteMessage').textContent = `Are you sure you want to delete Ticket #${ticketNumber}? This action cannot be undone.`;
-        document.getElementById('deleteForm').action = `/inspection/delete-ticket/${ticketId}/`;
-        document.getElementById('deleteModal').style.display = 'block';
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').style.display = 'none';
-    }
-
-    // Close modal if user clicks outside of it
-    window.onclick = function(event) {
-        var modal = document.getElementById('deleteModal');
-        if (event.target == modal) {
-            closeDeleteModal();
-        }
-    }
-</script>
 {% endblock %}
+

@@ -52,7 +52,14 @@
                 <option value="Tag 1">Tag 1</option>
             </select>
         </div>
-        
+        <label for="claim">Link to Claim (optional)</label>
+        <select class="form-control" name="claim_id">
+                <option value="">-- Select a claim --</option>
+                {% for claim in claims %}
+                    <option value="{{ claim.id }}">{{ claim.claim_number }} — {{ claim.customer_name }}</option>
+                {% endfor %}
+        </select>
+
         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; margin-top: 20px;">Create Ticket</button>
     </form>
 </div>

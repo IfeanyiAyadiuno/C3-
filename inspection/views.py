@@ -9,6 +9,7 @@ from django.db import connection
 import time
 import os
 from django.conf import settings
+from warranty.models import Claim
 
 # Create your views here.
 def index(request):
@@ -17,29 +18,29 @@ def index(request):
 
 def inspection_tickets(request):
     """Display a list of all inspection tickets"""
-    # Print request information
+
     print("\n" + "="*50)
     print(f"Loading inspection_tickets view - Time: {datetime.now()}")
     print(f"Request method: {request.method}, Request parameters: {request.GET}")
-    
-    # Clear any possible query cache
-    from django.db import connection
+
+    # Force DB refresh (optional but kept for debug purposes)
     cursor = connection.cursor()
-    cursor.execute("SELECT 1")  # Simple query to force refresh connection
-    
-    # Use select_related to preload inspector data, reducing database queries
-    tickets = InspectionTicket.objects.select_related('inspector').all().order_by('-date_created')
-    
-    # For debugging: Print status and inspector info for each ticket
+    cursor.execute("SELECT 1")
+
+    # Preload inspector and claim to reduce DB hits
+    tickets = InspectionTicket.objects.select_related('inspector', 'claim').all().order_by('-date_created')
+
+    # Debug: Show ticket, inspector, and claim info
     for ticket in tickets:
         inspector_name = ticket.inspector.name if ticket.inspector else "Unassigned"
-        print(f"Ticket #{ticket.ticket_number} - Status: {ticket.status}, Inspector: {inspector_name}")
-    
+        claim_number = ticket.claim.claim_number if ticket.claim else "None"
+        print(f"Ticket #{ticket.ticket_number} - Status: {ticket.status}, Inspector: {inspector_name}, Claim: {claim_number}")
+
     context = {
         'tickets': tickets,
     }
-    
-    # Force refresh page, add no-cache headers
+
+    # Set cache-control headers
     response = render(request, 'inspection/inspection_tickets.html', context)
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response['Pragma'] = 'no-cache'
@@ -260,7 +261,7 @@ def schedule_inspection(request, ticket_id=None):
     return render(request, 'inspection/schedule_inspection.html', context)
 
 def create_inspection_ticket(request):
-    """Create a new inspection ticket"""
+    """Create a new inspection ticket, optionally linked to a claim"""
     if request.method == 'POST':
         # Generate unique ticket number
         last_ticket = InspectionTicket.objects.order_by('-id').first()
@@ -268,7 +269,7 @@ def create_inspection_ticket(request):
             ticket_num = f"T{int(last_ticket.ticket_number[1:]) + 1:05d}"
         else:
             ticket_num = "T00001"
-        
+
         # Create new ticket
         ticket = InspectionTicket(
             ticket_number=ticket_num,
@@ -279,11 +280,21 @@ def create_inspection_ticket(request):
             priority=request.POST.get('priority', 'Normal'),
             tag=request.POST.get('tag', 'No Tag Assigned'),
         )
+
+        # Optional: Link to a claim
+        claim_id = request.POST.get('claim_id')
+        if claim_id:
+            try:
+                ticket.claim = Claim.objects.get(id=claim_id)
+            except Claim.DoesNotExist:
+                pass  # Silently ignore invalid claim IDs
+
         ticket.save()
-        
         return redirect('inspection_tickets')
-    
-    return render(request, 'inspection/create_ticket.html')
+
+    # GET request: render the form with claim options
+    claims = Claim.objects.exclude(claim_number__isnull=True).exclude(claim_number__exact='').order_by('-date_issued')
+    return render(request, 'inspection/create_ticket.html', {'claims': claims})
 
 def create_inspector(request):
     """Create a new inspector"""
