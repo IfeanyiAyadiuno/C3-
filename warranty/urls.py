@@ -8,6 +8,5 @@ urlpatterns = [
     path('claims/', views.claims_list, name='claims_list'),
     path('claims/<int:claim_id>/', views.claim_detail, name='claim_detail'),
     path('policies/search/', views.policies_search, name='policies_search'),
-    path('dealer/update-claim/', views.update_claim, name='update_claim'),
 ]
 

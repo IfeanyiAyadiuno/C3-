@@ -29,7 +29,7 @@
             <p>Status: {{ claim.inspection_status }}</p>
             <p>Ticket #: {{ claim.inspection_ticket }}</p>
             <p>Notes: {{ claim.inspection_notes }}</p>
-            <p>Estimate: {{ claim.estimate }}</p>
+            <p>Estimate: {{ claim.estimate_amount }}</p>
         </div>
     </div>
 
@@ -63,7 +63,45 @@
         Closed
     </div>
 </div>
+
+<!-- 🔧 Update Claim Section -->
+<div class="card p-4 shadow mt-5" style="border-radius: 10px;">
+    <div class="card-header text-white text-center bg-dark">
+        <h5>Update This Claim</h5>
+    </div>
+    <form method="post" action="" class="p-4">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label>Status</label>
+                <select name="status" class="form-control">
+                    <option value="Pending" {% if claim.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="Approved" {% if claim.status == 'Approved' %}selected{% endif %}>Approved</option>
+                    <option value="Denied" {% if claim.status == 'Denied' %}selected{% endif %}>Denied</option>
+                    <option value="Resolved" {% if claim.status == 'Resolved' %}selected{% endif %}>Resolved</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label>Assigned To</label>
+                <input type="text" name="assigned_to" class="form-control" value="{{ claim.assigned_to|default_if_none:'' }}">
+            </div>
+            <div class="col-md-4">
+                <label>Estimate</label>
+                <input type="number" name="estimate_amount" class="form-control" step="0.01" value="{{ claim.estimate_amount|default_if_none:'' }}">
+            </div>
+            <div class="col-md-12">
+                <label>C3 Internal Notes</label>
+                <textarea name="c3_notes" class="form-control" rows="3">{{ claim.c3_notes|default_if_none:'' }}</textarea>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-dark">Save Changes</button>
+        </div>
+    </form>
+</div>
 {% endblock %}
+
+
 
 
 
