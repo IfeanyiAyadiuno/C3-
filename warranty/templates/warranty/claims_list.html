@@ -3,9 +3,35 @@
 
 {% block title %}Claims List{% endblock %}
 
+{% block extra_styles %}
+<style>
+    .table thead th {
+        background-color: #eaf4ff !important;
+        color: #333 !important;
+        font-weight: 600 !important;
+        border: 1px solid #dee2e6 !important;
+    }
+
+    .table td {
+        padding: 18px 20px !important;
+        border: 1px solid #dee2e6 !important;
+        background-color: #fff !important;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1 !important;
+    }
+
+    .table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h2 class="mb-4">Claims</h2>
-<div class="card p-3">
+<div class="card p-3 shadow-sm">
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="thead-light">
@@ -44,6 +70,7 @@
     </div>
 </div>
 {% endblock %}
+
 
 
 

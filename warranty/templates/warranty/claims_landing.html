@@ -22,24 +22,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-md-6">
-        <div class="card bg-light">
-            <div class="card-header bg-info text-white">Search Policies</div>
-            <div class="card-body">
-                <form method="get" action="{% url 'warranty:policies_search' %}">
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="first_name" placeholder="First Name">
-                        <input type="text" class="form-control mt-2" name="last_name" placeholder="Last Name">
-                        <input type="text" class="form-control mt-2" name="email" placeholder="Email">
-                        <input type="text" class="form-control mt-2" name="phone" placeholder="Phone Number">
-                        <input type="text" class="form-control mt-2" name="policy_number" placeholder="Policy Number">
-                        <button class="btn btn-dark mt-3 w-100">Search</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}
 

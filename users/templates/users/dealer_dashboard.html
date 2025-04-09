@@ -10,8 +10,12 @@
 <body class="dashboard-container">
 
 <!-- Header -->
-<div class="top-header">
-    <h2>Toyota Nord Montreal <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+<div class="top-header d-flex justify-content-between align-items-center px-4">
+    <h2>Consumer Car Care <img src="{% static 'images/logo.png' %}" alt="Logo"></h2>
+    <form method="post" action="{% url 'users:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+    </form>
 </div>
 
 <!-- Date Bar -->
@@ -21,14 +25,13 @@
 
 <!-- Welcome Message -->
 <div class="welcome-section">
-    <h4>Good afternoon, Toyota-Nord Montreal!</h4>
+    <h4>Good afternoon, {{ user.username }}!</h4>
 </div>
 
 <!-- Main Dealer Functions -->
-<!-- Features Section -->
 <div class="features-container">
     <a href="{% url 'users:record_sale' %}" class="feature text-decoration-none text-dark">
-        <img src="{% static 'images/sales.png' %}" alt="Sales" style="height: 90px;">  <!-- optional resizing -->
+        <img src="{% static 'images/sales.png' %}" alt="Sales" style="height: 90px;">
         <h3 style="font-size: 1.8rem; font-weight: 600;">Record a Sale</h3>
         <p style="font-size: 1.1rem;">Capture C3 service and warranty sales.</p>
     </a>
@@ -40,7 +43,8 @@
     </a>
 </div>
 
-
 </body>
 </html>
+
+
 

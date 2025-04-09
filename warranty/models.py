@@ -29,8 +29,6 @@ class Claim(models.Model):
 class Policy(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    email = models.EmailField()
-    phone = models.CharField(max_length=20)
     policy_number = models.CharField(max_length=30, unique=True)
 
     def __str__(self):

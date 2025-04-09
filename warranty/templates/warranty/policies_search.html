@@ -1,23 +1,17 @@
-
 {% extends 'warranty/base.html' %}
 {% load static %}
-{% block title %}Search Policies{% endblock %}
+{% block title %}Search Claims{% endblock %}
 
 {% block content %}
 <div class="search-section">
     <div class="card">
-        <div class="card-header bg-info text-white">Search Policies</div>
+        <div class="card-header bg-info text-white">Search Claims</div>
         <div class="card-body">
             <form method="get" action="">
                 <div class="form-row">
-                    <input type="text" class="form-control mb-2" name="first_name" placeholder="First Name" value="{{ request.GET.first_name }}">
-                    <input type="text" class="form-control mb-2" name="last_name" placeholder="Last Name" value="{{ request.GET.last_name }}">
+                    <input type="text" name="customer_name" class="form-control mb-2" placeholder="Customer Name" value="{{ request.GET.customer_name }}">
+                    <input type="text" name="claim_number" class="form-control mb-2" placeholder="Claim Number" value="{{ request.GET.claim_number }}">
                 </div>
-                <div class="form-row">
-                    <input type="text" class="form-control mb-2" name="email" placeholder="example@email.com" value="{{ request.GET.email }}">
-                    <input type="text" class="form-control mb-2" name="phone" placeholder="(XXX) XXX-XXXX" value="{{ request.GET.phone }}">
-                </div>
-                <input type="text" class="form-control mb-2" name="policy_number" placeholder="E.g. E00001" value="{{ request.GET.policy_number }}">
                 <button class="btn btn-dark w-100">Search</button>
             </form>
         </div>
@@ -32,21 +26,21 @@
             <table class="table table-striped mb-0">
                 <thead>
                     <tr>
-                        <th>Policy #</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
+                        <th>Claim #</th>
+                        <th>Customer</th>
+                        <th>Warranty Type</th>
+                        <th>Date Issued</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for policy in results %}
+                    {% for claim in results %}
                     <tr>
-                        <td>{{ policy.policy_number }}</td>
-                        <td>{{ policy.first_name }}</td>
-                        <td>{{ policy.last_name }}</td>
-                        <td>{{ policy.email }}</td>
-                        <td>{{ policy.phone }}</td>
+                        <td>{{ claim.claim_number }}</td>
+                        <td>{{ claim.customer_name }}</td>
+                        <td>{{ claim.warranty_type }}</td>
+                        <td>{{ claim.date_issued }}</td>
+                        <td>{{ claim.status }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -57,6 +51,7 @@
     <p class="text-muted mt-3">No results found. Try different search terms.</p>
 {% endif %}
 {% endblock %}
+
 
 
 

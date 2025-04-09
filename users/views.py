@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from datetime import datetime
 from warranty.forms import DealerClaimForm
+from warranty.models import Claim
 
 
 def register(request):
@@ -117,6 +118,35 @@ def submit_claim(request):
         'form': form,
         'current_date': datetime.now().strftime('%B %d, %Y'),
     })
+
+@login_required
+def update_claim(request):
+    """Allows dealership staff to update an existing warranty claim."""
+    if request.method == 'POST':
+        claim_number = request.POST.get('claim_number')
+        try:
+            claim = Claim.objects.get(claim_number=claim_number)
+        except Claim.DoesNotExist:
+            messages.error(request, f"Claim #{claim_number} not found.")
+            return redirect('users:submit_claim')
+
+        # Update fields if provided
+        status = request.POST.get('status')
+        assigned_to = request.POST.get('assigned_to')
+        c3_notes = request.POST.get('c3_notes')
+
+        if status:
+            claim.status = status
+        if assigned_to:
+            claim.assigned_to = assigned_to
+        if c3_notes:
+            claim.c3_notes = c3_notes
+
+        claim.save()
+        messages.success(request, f"Claim #{claim_number} updated successfully.")
+        return redirect('users:dealer_dashboard')
+
+    return redirect('users:submit_claim')
 
 
 

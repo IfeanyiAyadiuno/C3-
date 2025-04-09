@@ -3,43 +3,221 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Consumer Car Care{% endblock %}</title>
-
-    <!-- ✅ Add Bootstrap and main stylesheet -->
-    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <!-- Optional space for extra styles -->
     <style>
-        {% block extra_styles %}{% endblock %}
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        /* Top Navigation Bar */
+        .header {
+            background-color: #000000;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .logo-icon {
+            background-color: #3498db;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 8px;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 20px;
+        }
+        
+        /* Sub Navigation Bar */
+        .sub-header {
+            background-color: #007bff;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sub-header .icon {
+            margin-right: 8px;
+        }
+        
+        .sub-header .title {
+            font-weight: bold;
+            margin-right: 20px;
+        }
+        
+        .sub-header .actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        
+        /* Table Styles */
+        .table {
+            width: 100%;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .table-header {
+            background-color: #f5f7fa;
+            padding: 15px;
+            font-weight: bold;
+            color: #333;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            align-items: center;
+        }
+        
+        .table-row {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            align-items: center;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        /* Card Styles */
+        .card {
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        
+        /* Form Styles */
+        form {
+            margin-top: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        /* Calendar Styles */
+        .calendar {
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #f5f7fa;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .calendar-day.today {
+            background-color: #e1f5fe;
+        }
+        
+        .calendar-day:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+        
+        /* User Information Styles */
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f1c40f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            color: white;
+        }
     </style>
 </head>
 <body>
-
-    <!-- ✅ Top Header Bar -->
-    <div class="top-header d-flex justify-content-between align-items-center px-4 py-2">
-        <h2 class="mb-0">
-            <a href="{% url 'users:dashboard' %}" class="text-white text-decoration-none">
+    <!-- Top Navigation Bar -->
+    <div class="header">
+        <div class="logo d-flex align-items-center">
+            <a href="{% url 'users:dashboard' %}" style="color: white; text-decoration: none; font-weight: bold;">
                 Consumer Car Care
             </a>
-            <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 30px; margin-left: 10px;">
-        </h2>        
-        <div class="header-links">
-            <a href="{% url 'warranty:policies_search' %}">View Policies</a>
+            <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 28px; margin-left: 10px;">
+        </div>   
+    </div>
+
+<!-- Sub Header Bar for Warranty -->
+    <div class="sub-header">
+        <div class="icon">🔍</div>
+        <div class="title">Warranty & Claims</div>
+        <div class="actions">
             <a href="{% url 'warranty:claims_list' %}">View Claims</a>
+            <a href="{% url 'warranty:policies_search' %}">Search Policies</a>
         </div>
     </div>
 
-    <!-- ✅ Blue Title Bar -->
-    <div class="warranty-title-bar">
-        <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 30px;">
-        C<sup>3</sup> Warranty
-    </div>
-
-    <!-- ✅ Main Content Block -->
-    <div class="container mt-4 mb-5">
-        {% block content %}{% endblock %}
-    </div>
-
+<!-- Page Content -->
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
 </body>
 </html>
+

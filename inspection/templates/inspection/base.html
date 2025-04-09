@@ -17,9 +17,9 @@
         
         /* Top Navigation Bar */
         .header {
-            background-color: #007bff;
+            background-color: #000000;
             color: white;
-            padding: 10px 20px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -50,9 +50,9 @@
         
         /* Sub Navigation Bar */
         .sub-header {
-            background-color: #3498db;
+            background-color: #007bff;
             color: white;
-            padding: 10px 20px;
+            padding: 18px 30px;
             display: flex;
             align-items: center;
         }
@@ -202,12 +202,7 @@
                 Consumer Car Care
             </a>
             <img src="{% static 'images/logo.png' %}" alt="Logo" style="height: 28px; margin-left: 10px;">
-        </div>             
-        <div>
-            <a href="{% url 'users:dashboard' %}" style="color: white; text-decoration: none; margin-right: 15px;">Dashboard</a>
-            <span class="notification-icon" style="margin-right: 10px;">🔔</span>
-            <img src="{% static 'images/bell.png' %}" alt="Notifications" style="height: 20px;">
-        </div>
+        </div>                
     </div>
     
     <!-- Sub Navigation Bar -->
