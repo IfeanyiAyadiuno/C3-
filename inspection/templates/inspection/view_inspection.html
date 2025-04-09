@@ -1,0 +1,102 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}View Inspection | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- View Inspection Title -->
+    <h2>Inspection Details for Ticket #{{ ticket.ticket_number }}</h2>
+    
+    <div class="user-info">
+        <div class="user-avatar">{{ ticket.inspector.name|first }}</div>
+        <div>
+            <h3 style="margin: 0;">Inspector: {{ ticket.inspector.name }}</h3>
+            <p style="margin: 0; color: #666;">{{ ticket.inspection_type }} Inspection for {{ ticket.company }}</p>
+        </div>
+    </div>
+    <hr>
+    
+    <!-- Status Badge -->
+    <div style="text-align: right; margin-bottom: 15px;">
+        {% if ticket.status == 'Completed' %}
+            <span style="display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background-color: #d4edda; color: #155724;">
+                {{ ticket.status }}
+            </span>
+        {% elif ticket.status == 'Assigned' %}
+            <span style="display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background-color: #fff3cd; color: #856404;">
+                {{ ticket.status }}
+            </span>
+        {% else %}
+            <span style="display: inline-block; padding: 5px 10px; border-radius: 4px; font-weight: bold; background-color: #f8d7da; color: #721c24;">
+                {{ ticket.status }}
+            </span>
+        {% endif %}
+    </div>
+    
+    <!-- Ticket Details -->
+    <div style="margin-bottom: 20px; display: flex; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 250px; margin-bottom: 15px;">
+            <h4>Ticket Information</h4>
+            <p><strong>Vehicle Make:</strong> {{ ticket.vehicle_make }}</p>
+            <p><strong>VIN:</strong> {{ ticket.vin }}</p>
+            <p><strong>Priority:</strong> <span {% if ticket.priority == 'Critical' %}style="color: red;"{% endif %}>{{ ticket.priority }}</span></p>
+            <p><strong>Tag:</strong> {{ ticket.tag }}</p>
+            <p><strong>Created:</strong> {{ ticket.date_created|date:"Y-m-d H:i" }}</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 250px; margin-bottom: 15px;">
+            <h4>Schedule Details</h4>
+            {% if ticket.inspectionschedule %}
+                <p><strong>Date:</strong> {{ ticket.inspectionschedule.inspection_date }}</p>
+                <p><strong>Time:</strong> {{ ticket.inspectionschedule.inspection_time }}</p>
+                <p><strong>Duration:</strong> {{ ticket.inspectionschedule.duration }} hour(s)</p>
+                {% if ticket.inspectionschedule.notes %}
+                <p><strong>Schedule Notes:</strong> {{ ticket.inspectionschedule.notes }}</p>
+                {% endif %}
+            {% else %}
+                <p>No schedule information available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Inspection Notes -->
+    {% if ticket.status == 'Completed' %}
+    <div style="margin-bottom: 20px;">
+        <h4>Inspection Notes</h4>
+        <div style="padding: 15px; background-color: #f9f9f9; border-radius: 4px; border-left: 4px solid #007bff;">
+            {% if ticket.inspection_notes %}
+                {{ ticket.inspection_notes|linebreaks }}
+            {% else %}
+                <p>No inspection notes provided.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Uploaded Images -->
+    {% if images %}
+    <div style="margin-top: 30px;">
+        <h4>Inspection Images</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+            {% for image in images %}
+            <div style="width: 200px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <img src="{{ image.url }}" alt="{{ image.name }}" style="width: 100%; height: 150px; object-fit: cover;">
+                <div style="padding: 8px; background-color: #f5f5f5; text-align: center; border-top: 1px solid #ddd; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ image.name }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% elif ticket.status == 'Completed' %}
+    <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 4px; text-align: center;">
+        <p>No images were uploaded for this inspection.</p>
+    </div>
+    {% endif %}
+    
+    <!-- Return Button -->
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="{% url 'inspection_tickets' %}" class="btn btn-primary">Return to Tickets</a>
+    </div>
+</div>
+{% endblock %} 

@@ -7,37 +7,39 @@ import calendar
 from django.db import transaction
 from django.db import connection
 import time
+import os
+from django.conf import settings
 
 # Create your views here.
 def index(request):
-    """主页视图，重定向到检查票列表页面"""
+    """Home page view, redirects to inspection tickets list page"""
     return redirect('inspection_tickets')
 
 def inspection_tickets(request):
-    """显示所有检查票的列表"""
-    # 打印请求信息
+    """Display a list of all inspection tickets"""
+    # Print request information
     print("\n" + "="*50)
-    print(f"加载inspection_tickets视图 - 时间: {datetime.now()}")
-    print(f"请求方法: {request.method}, 请求参数: {request.GET}")
+    print(f"Loading inspection_tickets view - Time: {datetime.now()}")
+    print(f"Request method: {request.method}, Request parameters: {request.GET}")
     
-    # 清除任何可能的查询缓存
+    # Clear any possible query cache
     from django.db import connection
     cursor = connection.cursor()
-    cursor.execute("SELECT 1")  # 简单查询强制刷新连接
+    cursor.execute("SELECT 1")  # Simple query to force refresh connection
     
-    # 使用select_related预加载inspector数据，减少数据库查询
+    # Use select_related to preload inspector data, reducing database queries
     tickets = InspectionTicket.objects.select_related('inspector').all().order_by('-date_created')
     
-    # 用于调试：打印每个ticket的状态和检查员信息
+    # For debugging: Print status and inspector info for each ticket
     for ticket in tickets:
-        inspector_name = ticket.inspector.name if ticket.inspector else "未分配"
-        print(f"Ticket #{ticket.ticket_number} - 状态: {ticket.status}, 检查员: {inspector_name}")
+        inspector_name = ticket.inspector.name if ticket.inspector else "Unassigned"
+        print(f"Ticket #{ticket.ticket_number} - Status: {ticket.status}, Inspector: {inspector_name}")
     
     context = {
         'tickets': tickets,
     }
     
-    # 强制刷新页面，添加no-cache头
+    # Force refresh page, add no-cache headers
     response = render(request, 'inspection/inspection_tickets.html', context)
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response['Pragma'] = 'no-cache'
@@ -45,96 +47,96 @@ def inspection_tickets(request):
     return response
 
 def assign_inspector(request):
-    """显示并处理检查员分配的页面"""
+    """Display and handle the inspector assignment page"""
     inspectors = Inspector.objects.all()
     
-    # 调试信息：打印请求方法和参数
-    print(f"请求方法: {request.method}")
+    # Debug information: Print request method and parameters
+    print(f"Request method: {request.method}")
     if request.method == 'GET':
-        print(f"GET参数: {request.GET}")
+        print(f"GET parameters: {request.GET}")
     elif request.method == 'POST':
-        print(f"POST参数: {request.POST}")
+        print(f"POST parameters: {request.POST}")
     
-    # 检查是否提供了ticket_id
+    # Check if ticket_id is provided
     ticket_id = request.GET.get('ticket_id')
     if not ticket_id:
-        print("错误: 未提供ticket_id")
+        print("Error: No ticket_id provided")
         return redirect('inspection_tickets')
     
-    # 获取对应的ticket
+    # Get the corresponding ticket
     try:
         ticket = InspectionTicket.objects.get(id=ticket_id)
-        print(f"成功获取ticket: id={ticket.id}, ticket_number={ticket.ticket_number}, status={ticket.status}")
+        print(f"Successfully retrieved ticket: id={ticket.id}, ticket_number={ticket.ticket_number}, status={ticket.status}")
     except InspectionTicket.DoesNotExist:
-        print(f"错误: 找不到ID为{ticket_id}的票据")
+        print(f"Error: Cannot find ticket with ID {ticket_id}")
         return redirect('inspection_tickets')
     
     if request.method == 'POST':
         inspector_id = request.POST.get('inspector_id')
         post_ticket_id = request.POST.get('ticket_id')
         
-        print(f"接收到POST请求: inspector_id={inspector_id}, ticket_id={post_ticket_id}")
+        print(f"Received POST request: inspector_id={inspector_id}, ticket_id={post_ticket_id}")
         
         if not inspector_id or not post_ticket_id:
-            # 添加错误处理
-            print(f"错误：参数不完整：inspector_id={inspector_id}, ticket_id={post_ticket_id}")
+            # Add error handling
+            print(f"Error: Incomplete parameters: inspector_id={inspector_id}, ticket_id={post_ticket_id}")
             return redirect('inspection_tickets')
         
         try:
-            # 尝试常规的ORM更新方法
+            # Try regular ORM update method
             ticket = InspectionTicket.objects.get(id=post_ticket_id)
             inspector = Inspector.objects.get(id=inspector_id)
             
-            print(f"更新前 - ticket.id: {ticket.id}, inspector_id: {ticket.inspector_id}, status: {ticket.status}")
+            print(f"Before update - ticket.id: {ticket.id}, inspector_id: {ticket.inspector_id}, status: {ticket.status}")
             
-            # 保存旧值用于比较
+            # Save old values for comparison
             old_inspector_id = ticket.inspector_id
             old_status = ticket.status
             
-            # 使用ORM进行更新
+            # Use ORM for update
             ticket.inspector = inspector
             ticket.status = 'Assigned'
             ticket.save()
             
-            # 验证更新是否成功
+            # Verify if update was successful
             updated_ticket = InspectionTicket.objects.get(id=post_ticket_id)
-            print(f"使用ORM更新后 - inspector_id: {updated_ticket.inspector_id}, status: {updated_ticket.status}")
+            print(f"After ORM update - inspector_id: {updated_ticket.inspector_id}, status: {updated_ticket.status}")
             
-            # 检查值是否已更新
+            # Check if values were updated
             if updated_ticket.inspector_id == old_inspector_id and updated_ticket.status == old_status:
-                print("警告: 使用ORM更新似乎没有生效，尝试直接SQL更新")
+                print("Warning: ORM update seems to have failed, trying direct SQL update")
                 
-                # 如果ORM更新失败，使用直接SQL
+                # If ORM update fails, use direct SQL
                 with connection.cursor() as cursor:
-                    # 确保使用正确的表名前缀
+                    # Ensure using correct table name prefix
                     cursor.execute(
                         "UPDATE inspection_inspectionticket SET inspector_id = %s, status = %s WHERE id = %s",
                         [inspector_id, 'Assigned', post_ticket_id]
                     )
-                    print(f"执行SQL: UPDATE inspection_inspectionticket SET inspector_id = {inspector_id}, status = 'Assigned' WHERE id = {post_ticket_id}")
+                    print(f"Executing SQL: UPDATE inspection_inspectionticket SET inspector_id = {inspector_id}, status = 'Assigned' WHERE id = {post_ticket_id}")
                 
-                # 再次验证更新
+                # Verify update again
                 final_ticket = InspectionTicket.objects.get(id=post_ticket_id)
-                print(f"SQL更新后 - inspector_id: {final_ticket.inspector_id}, status: {final_ticket.status}")
+                print(f"After SQL update - inspector_id: {final_ticket.inspector_id}, status: {final_ticket.status}")
             
-            # 添加时间戳强制浏览器刷新
+            # Add timestamp to force browser refresh
             timestamp = int(time.time())
             
-            # 强制提交数据库更改
+            # Force commit database changes
             from django.db import transaction
             transaction.commit()
-            print("已提交事务")
+            print("Transaction committed")
             
-            # 清空Django缓存
+            # Clear Django cache
             from django.db.models import signals
             for model in [InspectionTicket, Inspector]:
                 signals.post_save.send(sender=model, instance=None)
             
-            print("重定向到tickets列表页面")
+            print("Redirecting to tickets list page")
             return redirect(f'/inspection/tickets/?updated={timestamp}')
         except Exception as e:
-            # 捕获并打印任何错误
-            print(f"分配过程中出错：{str(e)}")
+            # Catch and print any errors
+            print(f"Error during assignment: {str(e)}")
             import traceback
             traceback.print_exc()
             return redirect('inspection_tickets')
@@ -145,27 +147,74 @@ def assign_inspector(request):
     }
     return render(request, 'inspection/assign_inspector.html', context)
 
+def complete_inspection(request, ticket_id=None):
+    """Mark an inspection as completed and upload images"""
+    ticket = None
+    if ticket_id:
+        ticket = get_object_or_404(InspectionTicket, id=ticket_id)
+    else:
+        ticket_id = request.GET.get('ticket_id')
+        if ticket_id:
+            ticket = get_object_or_404(InspectionTicket, id=ticket_id)
+        else:
+            return redirect('inspection_tickets')
+    
+    # Only assigned tickets can be completed
+    if ticket.status != 'Assigned':
+        return redirect('inspection_tickets')
+    
+    if request.method == 'POST':
+        # Handle form submission to complete the inspection
+        notes = request.POST.get('notes', '')
+        
+        # Update ticket status and save notes
+        ticket.status = 'Completed'
+        ticket.inspection_notes = notes
+        ticket.save()
+        
+        # Handle image uploads if provided
+        if request.FILES:
+            # Create directory for this ticket's images if it doesn't exist
+            upload_dir = os.path.join(settings.MEDIA_ROOT, f'inspection_images/{ticket.ticket_number}')
+            os.makedirs(upload_dir, exist_ok=True)
+            
+            for img_file in request.FILES.getlist('images'):
+                # Save the uploaded file
+                file_path = os.path.join(upload_dir, img_file.name)
+                with open(file_path, 'wb+') as destination:
+                    for chunk in img_file.chunks():
+                        destination.write(chunk)
+        
+        # Add timestamp to force browser refresh
+        timestamp = int(time.time())
+        return redirect(f'/inspection/tickets/?updated={timestamp}')
+    
+    context = {
+        'ticket': ticket,
+    }
+    return render(request, 'inspection/complete_inspection.html', context)
+
 def schedule_inspection(request, ticket_id=None):
-    """安排检查日程的页面"""
+    """Schedule inspection page"""
     ticket = None
     if ticket_id:
         ticket = get_object_or_404(InspectionTicket, id=ticket_id)
     
-    # 获取当前月份的日历
+    # Get current month's calendar
     today = timezone.now()
     year = today.year
     month = today.month
     
-    # 如果请求中包含年月参数，则使用请求的年月
+    # If request includes year/month parameters, use those instead
     if request.GET.get('year') and request.GET.get('month'):
         year = int(request.GET.get('year'))
         month = int(request.GET.get('month'))
     
-    # 获取当月第一天和最后一天
+    # Get first and last day of the month
     first_day = datetime(year, month, 1)
     last_day = datetime(year, month, calendar.monthrange(year, month)[1])
     
-    # 获取整月的日期列表
+    # Get list of days for the entire month
     days = []
     for day in range(1, calendar.monthrange(year, month)[1] + 1):
         days.append({
@@ -174,7 +223,7 @@ def schedule_inspection(request, ticket_id=None):
             'is_today': day == today.day and month == today.month and year == today.year
         })
     
-    # 处理POST请求（保存日程）
+    # Handle POST request (save schedule)
     if request.method == 'POST' and ticket:
         date_str = request.POST.get('date')
         time_str = request.POST.get('time')
@@ -182,7 +231,7 @@ def schedule_inspection(request, ticket_id=None):
         inspection_date = datetime.strptime(date_str, '%Y-%m-%d').date()
         inspection_time = datetime.strptime(time_str, '%H:%M').time()
         
-        # 检查是否已有日程，如果有则更新，否则创建新的
+        # Check if schedule exists, update if it does, otherwise create new one
         schedule, created = InspectionSchedule.objects.get_or_create(
             ticket=ticket,
             defaults={
@@ -211,16 +260,16 @@ def schedule_inspection(request, ticket_id=None):
     return render(request, 'inspection/schedule_inspection.html', context)
 
 def create_inspection_ticket(request):
-    """创建新的检查票"""
+    """Create a new inspection ticket"""
     if request.method == 'POST':
-        # 生成唯一的票号
+        # Generate unique ticket number
         last_ticket = InspectionTicket.objects.order_by('-id').first()
         if last_ticket:
             ticket_num = f"T{int(last_ticket.ticket_number[1:]) + 1:05d}"
         else:
             ticket_num = "T00001"
         
-        # 创建新票
+        # Create new ticket
         ticket = InspectionTicket(
             ticket_number=ticket_num,
             inspection_type=request.POST.get('inspection_type'),
@@ -237,7 +286,7 @@ def create_inspection_ticket(request):
     return render(request, 'inspection/create_ticket.html')
 
 def create_inspector(request):
-    """创建新的检查员"""
+    """Create a new inspector"""
     if request.method == 'POST':
         name = request.POST.get('name')
         phone = request.POST.get('phone')
@@ -256,3 +305,60 @@ def create_inspector(request):
             return redirect('inspection_tickets')
     
     return render(request, 'inspection/create_inspector.html')
+
+def view_inspection(request, ticket_id=None):
+    """View completed inspection details including uploaded images"""
+    ticket = None
+    if ticket_id:
+        ticket = get_object_or_404(InspectionTicket, id=ticket_id)
+    else:
+        ticket_id = request.GET.get('ticket_id')
+        if ticket_id:
+            ticket = get_object_or_404(InspectionTicket, id=ticket_id)
+        else:
+            return redirect('inspection_tickets')
+    
+    # Get uploaded images for this ticket if any
+    images = []
+    image_dir = os.path.join(settings.MEDIA_ROOT, f'inspection_images/{ticket.ticket_number}')
+    if os.path.exists(image_dir):
+        # Get all files in the directory
+        for file_name in os.listdir(image_dir):
+            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+                # Create relative URL path for each image - use settings.MEDIA_URL
+                image_url = f'{settings.MEDIA_URL}inspection_images/{ticket.ticket_number}/{file_name}'
+                images.append({
+                    'name': file_name,
+                    'url': image_url
+                })
+    
+    context = {
+        'ticket': ticket,
+        'images': images,
+        'view_mode': True,  # Flag to indicate view mode rather than edit mode
+    }
+    return render(request, 'inspection/view_inspection.html', context)
+
+def delete_inspection_ticket(request, ticket_id=None):
+    """Delete an inspection ticket"""
+    if request.method == 'POST':
+        # Get the ticket or return 404 if not found
+        ticket = get_object_or_404(InspectionTicket, id=ticket_id)
+        
+        # Store ticket number for confirmation message
+        ticket_number = ticket.ticket_number
+        
+        # Delete the ticket
+        ticket.delete()
+        
+        # If there are images, delete them too
+        image_dir = os.path.join(settings.MEDIA_ROOT, f'inspection_images/{ticket_number}')
+        if os.path.exists(image_dir):
+            import shutil
+            shutil.rmtree(image_dir)
+        
+        # Redirect with success message
+        return redirect('/inspection/tickets/?deleted=' + ticket_number)
+    
+    # If GET request, just redirect to tickets list
+    return redirect('inspection_tickets')

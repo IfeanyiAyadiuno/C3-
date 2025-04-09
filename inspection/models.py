@@ -38,6 +38,7 @@ class InspectionTicket(models.Model):
     tag = models.CharField(max_length=20, choices=TAG_CHOICES, default='No Tag Assigned')
     date_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Open')
+    inspection_notes = models.TextField(blank=True, null=True)
     
     def __str__(self):
         return f"Ticket #{self.ticket_number} - {self.inspection_type}"

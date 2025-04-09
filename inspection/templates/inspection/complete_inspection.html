@@ -1,0 +1,128 @@
+{% extends "inspection/base.html" %}
+
+{% block title %}Complete Inspection | Consumer Car Care{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Complete Inspection Title -->
+    <h2>Complete Inspection for Ticket #{{ ticket.ticket_number }}</h2>
+    
+    <div class="user-info">
+        <div class="user-avatar">{{ ticket.inspector.name|first }}</div>
+        <div>
+            <h3 style="margin: 0;">Inspector: {{ ticket.inspector.name }}</h3>
+            <p style="margin: 0; color: #666;">{{ ticket.inspection_type }} Inspection for {{ ticket.company }}</p>
+        </div>
+    </div>
+    <hr>
+    
+    <!-- Ticket Details -->
+    <div style="margin-bottom: 20px; display: flex; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 250px; margin-bottom: 15px;">
+            <h4>Ticket Information</h4>
+            <p><strong>Vehicle Make:</strong> {{ ticket.vehicle_make }}</p>
+            <p><strong>VIN:</strong> {{ ticket.vin }}</p>
+            <p><strong>Priority:</strong> <span {% if ticket.priority == 'Critical' %}style="color: red;"{% endif %}>{{ ticket.priority }}</span></p>
+            <p><strong>Tag:</strong> {{ ticket.tag }}</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 250px; margin-bottom: 15px;">
+            <h4>Schedule Details</h4>
+            {% if ticket.inspectionschedule %}
+                <p><strong>Date:</strong> {{ ticket.inspectionschedule.inspection_date }}</p>
+                <p><strong>Time:</strong> {{ ticket.inspectionschedule.inspection_time }}</p>
+                <p><strong>Duration:</strong> {{ ticket.inspectionschedule.duration }} hour(s)</p>
+            {% else %}
+                <p>No schedule information available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Complete Inspection Form -->
+    <form method="post" action="{% url 'complete_inspection' ticket.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="notes">Inspection Notes:</label>
+            <textarea id="notes" name="notes" class="form-control" rows="5" placeholder="Enter detailed inspection notes..."></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="images">Upload Images:</label>
+            <input type="file" id="images" name="images" class="form-control" multiple accept="image/*">
+            <small style="display: block; margin-top: 5px; color: #666;">You can select multiple images to upload.</small>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+            <a href="{% url 'inspection_tickets' %}" class="btn btn-primary" style="background-color: #6c757d;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="background-color: #28a745;">Complete Inspection</button>
+        </div>
+    </form>
+    
+    <!-- Preview Images before upload -->
+    <div id="imagePreviewContainer" style="margin-top: 20px; display: none;">
+        <h4>Image Previews:</h4>
+        <div id="imagePreviews" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+    </div>
+</div>
+
+<script>
+    // Preview images before upload
+    document.getElementById('images').addEventListener('change', function(event) {
+        const container = document.getElementById('imagePreviewContainer');
+        const previewArea = document.getElementById('imagePreviews');
+        
+        // Clear previous previews
+        previewArea.innerHTML = '';
+        
+        if (this.files.length > 0) {
+            container.style.display = 'block';
+            
+            // Create previews for each selected file
+            for (const file of this.files) {
+                if (file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.style.width = '150px';
+                        preview.style.height = '150px';
+                        preview.style.overflow = 'hidden';
+                        preview.style.position = 'relative';
+                        preview.style.border = '1px solid #ddd';
+                        preview.style.borderRadius = '4px';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        img.style.objectFit = 'cover';
+                        
+                        const fileName = document.createElement('div');
+                        fileName.textContent = file.name;
+                        fileName.style.position = 'absolute';
+                        fileName.style.bottom = '0';
+                        fileName.style.left = '0';
+                        fileName.style.right = '0';
+                        fileName.style.background = 'rgba(0,0,0,0.5)';
+                        fileName.style.color = 'white';
+                        fileName.style.padding = '2px 5px';
+                        fileName.style.fontSize = '10px';
+                        fileName.style.overflow = 'hidden';
+                        fileName.style.textOverflow = 'ellipsis';
+                        fileName.style.whiteSpace = 'nowrap';
+                        
+                        preview.appendChild(img);
+                        preview.appendChild(fileName);
+                        previewArea.appendChild(preview);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        } else {
+            container.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %} 
